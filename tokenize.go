@@ -22,3 +22,9 @@ type Token struct {
 	Kind  TokenKind
 	Value string
 }
+
+// Tokenize ...
+func Tokenize(code string) []Token {
+
+	return nil
+}
