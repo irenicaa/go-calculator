@@ -26,6 +26,9 @@ type Token struct {
 // Tokenize ...
 func Tokenize(code string) []Token {
 	tokens := []Token{}
+	for i := 0; i < len(code); i++ {
+		symbol := code[i]
+	}
 
 	return tokens
 }
