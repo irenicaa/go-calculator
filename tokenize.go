@@ -25,6 +25,7 @@ type Token struct {
 
 // Tokenize ...
 func Tokenize(code string) []Token {
+	tokens := []Token{}
 
-	return nil
+	return tokens
 }
