@@ -47,11 +47,29 @@ func Tokenize(code string) ([]Token, error) {
 		case symbol == '+':
 		case symbol == '-':
 		case symbol == '*':
+			token := Token{AsteriskToken, string(symbol)}
+			tokens = append(tokens, token)
+			state = defaultTokenizerState
 		case symbol == '/':
+			token := Token{SlashToken, string(symbol)}
+			tokens = append(tokens, token)
+			state = defaultTokenizerState
 		case symbol == '%':
+			token := Token{PercentToken, string(symbol)}
+			tokens = append(tokens, token)
+			state = defaultTokenizerState
 		case symbol == '^':
+			token := Token{ExponentiationToken, string(symbol)}
+			tokens = append(tokens, token)
+			state = defaultTokenizerState
 		case symbol == '(':
+			token := Token{LeftParenthesisToken, string(symbol)}
+			tokens = append(tokens, token)
+			state = defaultTokenizerState
 		case symbol == ')':
+			token := Token{RightParenthesisToken, string(symbol)}
+			tokens = append(tokens, token)
+			state = defaultTokenizerState
 		case symbol == '.':
 		case symbol == '_':
 		default:
