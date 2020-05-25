@@ -1,5 +1,10 @@
 package calculator
 
+import (
+	"fmt"
+	"unicode"
+)
+
 // TokenKind ...
 type TokenKind int
 
@@ -17,6 +22,14 @@ const (
 	RightParenthesisToken
 )
 
+type tokenizerState int
+
+const (
+	defaultTokenizerState tokenizerState = iota
+	numberTokenizerState
+	identifierTokenizerState
+)
+
 // Token ...
 type Token struct {
 	Kind  TokenKind
@@ -24,11 +37,27 @@ type Token struct {
 }
 
 // Tokenize ...
-func Tokenize(code string) []Token {
+func Tokenize(code string) ([]Token, error) {
 	tokens := []Token{}
-	for i := 0; i < len(code); i++ {
-		symbol := code[i]
+	state := defaultTokenizerState
+	for _, symbol := range code {
+		switch {
+		case unicode.IsDigit(symbol):
+		case unicode.IsLetter(symbol):
+		case symbol == '+':
+		case symbol == '-':
+		case symbol == '*':
+		case symbol == '/':
+		case symbol == '%':
+		case symbol == '^':
+		case symbol == '(':
+		case symbol == ')':
+		case symbol == '.':
+		case symbol == '_':
+		default:
+			return nil, fmt.Errorf("unknown symbol %q", symbol)
+		}
 	}
 
-	return tokens
+	return tokens, nil
 }
