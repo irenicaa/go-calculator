@@ -83,8 +83,66 @@ func Tokenize(code string) ([]Token, error) {
 			}
 			buffer += string(symbol)
 		case symbol == '+':
+			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			if state == exponentTokenizerState {
+				lastSymbol := buffer[len(buffer)-1]
+				if lastSymbol == 'e' || lastSymbol == 'E' {
+					return nil, fmt.Errorf("empty exponent part at position %d", index)
+				}
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			if state == identifierTokenizerState {
+				token := Token{IdentifierToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			token := Token{PlusToken, string(symbol)}
+			tokens = append(tokens, token)
+			state = defaultTokenizerState
 		case symbol == '-':
+			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			if state == exponentTokenizerState {
+				lastSymbol := buffer[len(buffer)-1]
+				if lastSymbol == 'e' || lastSymbol == 'E' {
+					return nil, fmt.Errorf("empty exponent part at position %d", index)
+				}
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			if state == identifierTokenizerState {
+				token := Token{MinusToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			token := Token{AsteriskToken, string(symbol)}
+			tokens = append(tokens, token)
+			state = defaultTokenizerState
 		case symbol == '*':
+			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			if state == exponentTokenizerState {
+				lastSymbol := buffer[len(buffer)-1]
+				if lastSymbol == 'e' || lastSymbol == 'E' {
+					return nil, fmt.Errorf("empty exponent part at position %d", index)
+				}
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
 			if state == identifierTokenizerState {
 				token := Token{IdentifierToken, buffer}
 				tokens = append(tokens, token)
@@ -94,6 +152,20 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '/':
+			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			if state == exponentTokenizerState {
+				lastSymbol := buffer[len(buffer)-1]
+				if lastSymbol == 'e' || lastSymbol == 'E' {
+					return nil, fmt.Errorf("empty exponent part at position %d", index)
+				}
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
 			if state == identifierTokenizerState {
 				token := Token{IdentifierToken, buffer}
 				tokens = append(tokens, token)
@@ -103,6 +175,20 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '%':
+			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			if state == exponentTokenizerState {
+				lastSymbol := buffer[len(buffer)-1]
+				if lastSymbol == 'e' || lastSymbol == 'E' {
+					return nil, fmt.Errorf("empty exponent part at position %d", index)
+				}
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
 			if state == identifierTokenizerState {
 				token := Token{IdentifierToken, buffer}
 				tokens = append(tokens, token)
@@ -112,6 +198,20 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '^':
+			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			if state == exponentTokenizerState {
+				lastSymbol := buffer[len(buffer)-1]
+				if lastSymbol == 'e' || lastSymbol == 'E' {
+					return nil, fmt.Errorf("empty exponent part at position %d", index)
+				}
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
 			if state == identifierTokenizerState {
 				token := Token{IdentifierToken, buffer}
 				tokens = append(tokens, token)
@@ -121,6 +221,20 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '(':
+			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			if state == exponentTokenizerState {
+				lastSymbol := buffer[len(buffer)-1]
+				if lastSymbol == 'e' || lastSymbol == 'E' {
+					return nil, fmt.Errorf("empty exponent part at position %d", index)
+				}
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
 			if state == identifierTokenizerState {
 				token := Token{IdentifierToken, buffer}
 				tokens = append(tokens, token)
@@ -130,6 +244,20 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == ')':
+			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			if state == exponentTokenizerState {
+				lastSymbol := buffer[len(buffer)-1]
+				if lastSymbol == 'e' || lastSymbol == 'E' {
+					return nil, fmt.Errorf("empty exponent part at position %d", index)
+				}
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
 			if state == identifierTokenizerState {
 				token := Token{IdentifierToken, buffer}
 				tokens = append(tokens, token)
