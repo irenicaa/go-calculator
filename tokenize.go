@@ -26,7 +26,9 @@ type tokenizerState int
 
 const (
 	defaultTokenizerState tokenizerState = iota
-	numberTokenizerState
+	integerPartTokenizerState
+	fractionalPartTokenizerState
+	exponentTokenizerState
 	identifierTokenizerState
 )
 
@@ -41,13 +43,48 @@ func Tokenize(code string) ([]Token, error) {
 	tokens := []Token{}
 	state := defaultTokenizerState
 	buffer := ""
-	for _, symbol := range code {
+	for index, symbol := range code {
 		switch {
 		case unicode.IsDigit(symbol):
+			if state == defaultTokenizerState {
+				state = integerPartTokenizerState
+			}
+			buffer += string(symbol)
+		case unicode.IsLetter(symbol):
+			if state == defaultTokenizerState {
+				state = identifierTokenizerState
+			}
+			if state == integerPartTokenizerState {
+				state = identifierTokenizerState
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			if state == fractionalPartTokenizerState {
+				if symbol == 'e' || symbol == 'E' {
+					state = exponentTokenizerState
+					buffer += string(symbol)
+					break
+				}
+				state = identifierTokenizerState
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
+			if state == exponentTokenizerState {
+				lastSymbol := buffer[len(buffer)-1]
+				if lastSymbol == 'e' || lastSymbol == 'E' {
+					return nil, fmt.Errorf("empty exponent part at position %d", index)
+				}
+				state = identifierTokenizerState
+				token := Token{NumberToken, buffer}
+				tokens = append(tokens, token)
+				buffer = ""
+			}
 			if state == identifierTokenizerState {
 				buffer += string(symbol)
 			}
-		case unicode.IsLetter(symbol):
+		case symbol == '_':
 			if state == defaultTokenizerState {
 				state = identifierTokenizerState
 			}
@@ -111,15 +148,8 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '.':
-		case symbol == '_':
-			if state == defaultTokenizerState {
-				state = identifierTokenizerState
-			}
-			if state == identifierTokenizerState {
-				buffer += string(symbol)
-			}
 		default:
-			return nil, fmt.Errorf("unknown symbol %q", symbol)
+			return nil, fmt.Errorf("unknown symbol %q at position %d", symbol, index)
 		}
 	}
 
