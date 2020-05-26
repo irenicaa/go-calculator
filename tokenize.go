@@ -269,6 +269,12 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '.':
+			if state == defaultTokenizerState || state == integerPartTokenizerState {
+				state = fractionalPartTokenizerState
+				buffer += string(symbol)
+				break
+			}
+			return nil, fmt.Errorf("unexpected fractional point at position %d", index)
 		default:
 			return nil, fmt.Errorf("unknown symbol %q at position %d", symbol, index)
 		}
