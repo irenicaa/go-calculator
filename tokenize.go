@@ -51,11 +51,7 @@ func Tokenize(code string) ([]Token, error) {
 			}
 			buffer += string(symbol)
 		case unicode.IsLetter(symbol) || symbol == '_':
-			if state == defaultTokenizerState {
-				state = identifierTokenizerState
-			}
 			if state == integerPartTokenizerState {
-				state = identifierTokenizerState
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
 				buffer = ""
@@ -66,7 +62,6 @@ func Tokenize(code string) ([]Token, error) {
 					buffer += string(symbol)
 					break
 				}
-				state = identifierTokenizerState
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
 				buffer = ""
@@ -76,11 +71,11 @@ func Tokenize(code string) ([]Token, error) {
 				if lastSymbol == 'e' || lastSymbol == 'E' {
 					return nil, fmt.Errorf("empty exponent part at position %d", index)
 				}
-				state = identifierTokenizerState
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
 				buffer = ""
 			}
+			state = identifierTokenizerState
 			buffer += string(symbol)
 		case unicode.IsSpace(symbol):
 			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
