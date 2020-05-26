@@ -91,7 +91,8 @@ func Tokenize(code string) ([]Token, error) {
 			if state == exponentTokenizerState {
 				lastSymbol := buffer[len(buffer)-1]
 				if lastSymbol == 'e' || lastSymbol == 'E' {
-					return nil, fmt.Errorf("empty exponent part at position %d", index)
+					buffer += string(symbol)
+					break
 				}
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
@@ -114,7 +115,8 @@ func Tokenize(code string) ([]Token, error) {
 			if state == exponentTokenizerState {
 				lastSymbol := buffer[len(buffer)-1]
 				if lastSymbol == 'e' || lastSymbol == 'E' {
-					return nil, fmt.Errorf("empty exponent part at position %d", index)
+					buffer += string(symbol)
+					break
 				}
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
