@@ -50,7 +50,7 @@ func Tokenize(code string) ([]Token, error) {
 				state = integerPartTokenizerState
 			}
 			buffer += string(symbol)
-		case unicode.IsLetter(symbol):
+		case unicode.IsLetter(symbol) || symbol == '_':
 			if state == defaultTokenizerState {
 				state = identifierTokenizerState
 			}
@@ -81,16 +81,7 @@ func Tokenize(code string) ([]Token, error) {
 				tokens = append(tokens, token)
 				buffer = ""
 			}
-			if state == identifierTokenizerState {
-				buffer += string(symbol)
-			}
-		case symbol == '_':
-			if state == defaultTokenizerState {
-				state = identifierTokenizerState
-			}
-			if state == identifierTokenizerState {
-				buffer += string(symbol)
-			}
+			buffer += string(symbol)
 		case symbol == '+':
 		case symbol == '-':
 		case symbol == '*':
