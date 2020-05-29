@@ -51,12 +51,7 @@ func Tokenize(code string) ([]Token, error) {
 			}
 			buffer += string(symbol)
 		case unicode.IsLetter(symbol) || symbol == '_':
-			if state == integerPartTokenizerState {
-				token := Token{NumberToken, buffer}
-				tokens = append(tokens, token)
-				buffer = ""
-			}
-			if state == fractionalPartTokenizerState {
+			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
 				if symbol == 'e' || symbol == 'E' {
 					state = exponentTokenizerState
 					buffer += string(symbol)
