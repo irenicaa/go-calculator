@@ -51,6 +51,9 @@ func Tokenize(code string) ([]Token, error) {
 			}
 			buffer += string(symbol)
 		case unicode.IsLetter(symbol) || symbol == '_':
+			if buffer == "." {
+				return nil, fmt.Errorf("empty exponent part at position %d", index)
+			}
 			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
 				if symbol == 'e' || symbol == 'E' {
 					state = exponentTokenizerState
