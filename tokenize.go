@@ -1,6 +1,7 @@
 package calculator
 
 import (
+	"errors"
 	"fmt"
 	"unicode"
 )
@@ -320,6 +321,27 @@ func Tokenize(code string) ([]Token, error) {
 			return nil, fmt.Errorf("unknown symbol %q at position %d", symbol, index)
 		}
 	}
-
+	if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+		if buffer == "." {
+			return nil, errors.New("both integer and fractional parts are empty at EOI")
+		}
+		token := Token{NumberToken, buffer}
+		tokens = append(tokens, token)
+		buffer = ""
+	}
+	if state == exponentTokenizerState {
+		lastSymbol := buffer[len(buffer)-1]
+		if lastSymbol == 'e' || lastSymbol == 'E' {
+			return nil, errors.New("empty exponent part at EOI")
+		}
+		token := Token{NumberToken, buffer}
+		tokens = append(tokens, token)
+		buffer = ""
+	}
+	if state == identifierTokenizerState {
+		token := Token{IdentifierToken, buffer}
+		tokens = append(tokens, token)
+		buffer = ""
+	}
 	return tokens, nil
 }
