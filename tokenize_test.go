@@ -15,13 +15,18 @@ func TestTokenize(test *testing.T) {
 		name       string
 		args       args
 		wantTokens []Token
-		wantErr    error
+		wantErr    string
 	}{}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			gotTokens, gotErr := Tokenize(testCase.args.code)
+
 			assert.Equal(test, testCase.wantTokens, gotTokens)
-			assert.Equal(test, testCase.wantErr, gotErr)
+			if testCase.wantErr == "" {
+				assert.NoError(test, gotErr)
+			} else {
+				assert.EqualError(test, gotErr, testCase.wantErr)
+			}
 		})
 	}
 }
