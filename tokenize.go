@@ -51,10 +51,10 @@ func Tokenize(code string) ([]Token, error) {
 			}
 			buffer += string(symbol)
 		case unicode.IsLetter(symbol) || symbol == '_':
-			if buffer == "." {
-				return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
-			}
 			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				if buffer == "." {
+					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
+				}
 				if symbol == 'e' || symbol == 'E' {
 					state = exponentTokenizerState
 					buffer += string(symbol)
@@ -76,10 +76,10 @@ func Tokenize(code string) ([]Token, error) {
 			state = identifierTokenizerState
 			buffer += string(symbol)
 		case unicode.IsSpace(symbol):
-			if buffer == "." {
-				return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
-			}
 			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				if buffer == "." {
+					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
+				}
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
 				buffer = ""
@@ -127,10 +127,10 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '-':
-			if buffer == "." {
-				return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
-			}
 			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				if buffer == "." {
+					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
+				}
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
 				buffer = ""
@@ -154,10 +154,10 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '*':
-			if buffer == "." {
-				return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
-			}
 			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				if buffer == "." {
+					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
+				}
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
 				buffer = ""
@@ -180,10 +180,10 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '/':
-			if buffer == "." {
-				return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
-			}
 			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				if buffer == "." {
+					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
+				}
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
 				buffer = ""
@@ -206,10 +206,10 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '%':
-			if buffer == "." {
-				return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
-			}
 			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				if buffer == "." {
+					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
+				}
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
 				buffer = ""
@@ -232,10 +232,10 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '^':
-			if buffer == "." {
-				return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
-			}
 			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				if buffer == "." {
+					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
+				}
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
 				buffer = ""
@@ -258,10 +258,10 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '(':
-			if buffer == "." {
-				return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
-			}
 			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				if buffer == "." {
+					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
+				}
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
 				buffer = ""
@@ -284,10 +284,10 @@ func Tokenize(code string) ([]Token, error) {
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == ')':
-			if buffer == "." {
-				return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
-			}
 			if state == integerPartTokenizerState || state == fractionalPartTokenizerState {
+				if buffer == "." {
+					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
+				}
 				token := Token{NumberToken, buffer}
 				tokens = append(tokens, token)
 				buffer = ""
