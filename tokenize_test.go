@@ -72,6 +72,67 @@ func TestTokenize(test *testing.T) {
 			wantTokens: []Token{{Kind: IdentifierToken, Value: "test_23"}},
 			wantErr:    "",
 		},
+
+		{
+			name: "plus",
+			args: args{code: "one+two"},
+			wantTokens: []Token{
+				{Kind: IdentifierToken, Value: "one"},
+				{Kind: PlusToken, Value: "+"},
+				{Kind: IdentifierToken, Value: "two"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "minus",
+			args: args{code: "one-two"},
+			wantTokens: []Token{
+				{Kind: IdentifierToken, Value: "one"},
+				{Kind: MinusToken, Value: "-"},
+				{Kind: IdentifierToken, Value: "two"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "asterisk",
+			args: args{code: "one*two"},
+			wantTokens: []Token{
+				{Kind: IdentifierToken, Value: "one"},
+				{Kind: AsteriskToken, Value: "*"},
+				{Kind: IdentifierToken, Value: "two"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "slash",
+			args: args{code: "one/two"},
+			wantTokens: []Token{
+				{Kind: IdentifierToken, Value: "one"},
+				{Kind: SlashToken, Value: "/"},
+				{Kind: IdentifierToken, Value: "two"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "percent",
+			args: args{code: "one%two"},
+			wantTokens: []Token{
+				{Kind: IdentifierToken, Value: "one"},
+				{Kind: PercentToken, Value: "%"},
+				{Kind: IdentifierToken, Value: "two"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "exponentiation",
+			args: args{code: "one^two"},
+			wantTokens: []Token{
+				{Kind: IdentifierToken, Value: "one"},
+				{Kind: ExponentiationToken, Value: "^"},
+				{Kind: IdentifierToken, Value: "two"},
+			},
+			wantErr: "",
+		},
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
