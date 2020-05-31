@@ -147,11 +147,11 @@ func Tokenize(code string) ([]Token, error) {
 				buffer = ""
 			}
 			if state == identifierTokenizerState {
-				token := Token{MinusToken, buffer}
+				token := Token{IdentifierToken, buffer}
 				tokens = append(tokens, token)
 				buffer = ""
 			}
-			token := Token{AsteriskToken, string(symbol)}
+			token := Token{MinusToken, string(symbol)}
 			tokens = append(tokens, token)
 			state = defaultTokenizerState
 		case symbol == '*':
