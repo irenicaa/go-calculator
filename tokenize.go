@@ -354,7 +354,6 @@ func Tokenize(code string) ([]Token, error) {
 		}
 		token := Token{NumberToken, buffer}
 		tokens = append(tokens, token)
-		buffer = ""
 	}
 	if state == exponentTokenizerState {
 		lastSymbol := buffer[len(buffer)-1]
@@ -363,12 +362,11 @@ func Tokenize(code string) ([]Token, error) {
 		}
 		token := Token{NumberToken, buffer}
 		tokens = append(tokens, token)
-		buffer = ""
 	}
 	if state == identifierTokenizerState {
 		token := Token{IdentifierToken, buffer}
 		tokens = append(tokens, token)
-		buffer = ""
 	}
+
 	return tokens, nil
 }

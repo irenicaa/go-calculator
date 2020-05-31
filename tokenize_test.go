@@ -67,7 +67,7 @@ func TestTokenize(test *testing.T) {
 			wantErr:    "",
 		},
 		{
-			name:       "identifier with underscore at the end",
+			name:       "identifier with underscore in the middle",
 			args:       args{code: "test_23"},
 			wantTokens: []Token{{Kind: IdentifierToken, Value: "test_23"}},
 			wantErr:    "",
@@ -130,6 +130,20 @@ func TestTokenize(test *testing.T) {
 				{Kind: IdentifierToken, Value: "one"},
 				{Kind: ExponentiationToken, Value: "^"},
 				{Kind: IdentifierToken, Value: "two"},
+			},
+			wantErr: "",
+		},
+
+		{
+			name: "parentheses and comma",
+			args: args{code: "test(one,two)"},
+			wantTokens: []Token{
+				{Kind: IdentifierToken, Value: "test"},
+				{Kind: LeftParenthesisToken, Value: "("},
+				{Kind: IdentifierToken, Value: "one"},
+				{Kind: CommaToken, Value: ","},
+				{Kind: IdentifierToken, Value: "two"},
+				{Kind: RightParenthesisToken, Value: ")"},
 			},
 			wantErr: "",
 		},
