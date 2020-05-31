@@ -53,6 +53,25 @@ func TestTokenize(test *testing.T) {
 			wantTokens: []Token{{Kind: NumberToken, Value: "23.42e-10"}},
 			wantErr:    "",
 		},
+
+		{
+			name:       "identifier",
+			args:       args{code: "test"},
+			wantTokens: []Token{{Kind: IdentifierToken, Value: "test"}},
+			wantErr:    "",
+		},
+		{
+			name:       "identifier with underscore at the start",
+			args:       args{code: "_test"},
+			wantTokens: []Token{{Kind: IdentifierToken, Value: "_test"}},
+			wantErr:    "",
+		},
+		{
+			name:       "identifier with underscore at the end",
+			args:       args{code: "test_23"},
+			wantTokens: []Token{{Kind: IdentifierToken, Value: "test_23"}},
+			wantErr:    "",
+		},
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
