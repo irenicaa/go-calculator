@@ -116,8 +116,39 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+		// minus
 		{
-			name: "minus",
+			name: "minus with integers",
+			args: args{code: "23-42"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23"},
+				{Kind: MinusToken, Value: "-"},
+				{Kind: NumberToken, Value: "42"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "minus with fractionals",
+			args: args{code: "23.5-42.5"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5"},
+				{Kind: MinusToken, Value: "-"},
+				{Kind: NumberToken, Value: "42.5"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "minus with exponents",
+			args: args{code: "23.5e10-42.5e10"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5e10"},
+				{Kind: MinusToken, Value: "-"},
+				{Kind: NumberToken, Value: "42.5e10"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "minus with identifer",
 			args: args{code: "one-two"},
 			wantTokens: []Token{
 				{Kind: IdentifierToken, Value: "one"},
@@ -126,8 +157,39 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+		// asterisk
 		{
-			name: "asterisk",
+			name: "asterisk with integers",
+			args: args{code: "23*42"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23"},
+				{Kind: AsteriskToken, Value: "*"},
+				{Kind: NumberToken, Value: "42"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "asterisk with fractionals",
+			args: args{code: "23.5*42.5"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5"},
+				{Kind: AsteriskToken, Value: "*"},
+				{Kind: NumberToken, Value: "42.5"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "asterisk with exponents",
+			args: args{code: "23.5e10*42.5e10"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5e10"},
+				{Kind: AsteriskToken, Value: "*"},
+				{Kind: NumberToken, Value: "42.5e10"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "asterisk with identifer",
 			args: args{code: "one*two"},
 			wantTokens: []Token{
 				{Kind: IdentifierToken, Value: "one"},
@@ -136,8 +198,39 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+		// slash
 		{
-			name: "slash",
+			name: "slash with integers",
+			args: args{code: "23/42"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23"},
+				{Kind: SlashToken, Value: "/"},
+				{Kind: NumberToken, Value: "42"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "slash with fractionals",
+			args: args{code: "23.5/42.5"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5"},
+				{Kind: SlashToken, Value: "/"},
+				{Kind: NumberToken, Value: "42.5"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "slash with exponents",
+			args: args{code: "23.5e10/42.5e10"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5e10"},
+				{Kind: SlashToken, Value: "/"},
+				{Kind: NumberToken, Value: "42.5e10"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "slash with identifer",
 			args: args{code: "one/two"},
 			wantTokens: []Token{
 				{Kind: IdentifierToken, Value: "one"},
@@ -146,8 +239,39 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+		// percent
 		{
-			name: "percent",
+			name: "percent with integers",
+			args: args{code: "23%42"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23"},
+				{Kind: PercentToken, Value: "%"},
+				{Kind: NumberToken, Value: "42"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "percent with fractionals",
+			args: args{code: "23.5%42.5"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5"},
+				{Kind: PercentToken, Value: "%"},
+				{Kind: NumberToken, Value: "42.5"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "percent with exponents",
+			args: args{code: "23.5e10%42.5e10"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5e10"},
+				{Kind: PercentToken, Value: "%"},
+				{Kind: NumberToken, Value: "42.5e10"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "percent with identifer",
 			args: args{code: "one%two"},
 			wantTokens: []Token{
 				{Kind: IdentifierToken, Value: "one"},
@@ -156,8 +280,39 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+		// exponentiation
 		{
-			name: "exponentiation",
+			name: "exponentiation with integers",
+			args: args{code: "23^42"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23"},
+				{Kind: ExponentiationToken, Value: "^"},
+				{Kind: NumberToken, Value: "42"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "exponentiation with fractionals",
+			args: args{code: "23.5^42.5"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5"},
+				{Kind: ExponentiationToken, Value: "^"},
+				{Kind: NumberToken, Value: "42.5"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "exponentiation with exponents",
+			args: args{code: "23.5e10^42.5e10"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5e10"},
+				{Kind: ExponentiationToken, Value: "^"},
+				{Kind: NumberToken, Value: "42.5e10"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "exponentiation with identifer",
 			args: args{code: "one^two"},
 			wantTokens: []Token{
 				{Kind: IdentifierToken, Value: "one"},
