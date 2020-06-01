@@ -116,6 +116,7 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+
 		// minus
 		{
 			name: "minus with integers",
@@ -157,6 +158,7 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+
 		// asterisk
 		{
 			name: "asterisk with integers",
@@ -198,6 +200,7 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+
 		// slash
 		{
 			name: "slash with integers",
@@ -239,6 +242,7 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+
 		// percent
 		{
 			name: "percent with integers",
@@ -280,6 +284,7 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+
 		// exponentiation
 		{
 			name: "exponentiation with integers",
