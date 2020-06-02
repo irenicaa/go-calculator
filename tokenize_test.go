@@ -124,6 +124,12 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+		{
+			name:       "plus with error (integer and fractional parts are empty)",
+			args:       args{code: ".+23"},
+			wantTokens: nil,
+			wantErr:    "both integer and fractional parts are empty at position 1",
+		},
 
 		// minus
 		{
@@ -173,6 +179,12 @@ func TestTokenize(test *testing.T) {
 				{Kind: IdentifierToken, Value: "two"},
 			},
 			wantErr: "",
+		},
+		{
+			name:       "minus with error (integer and fractional parts are empty)",
+			args:       args{code: ".-23"},
+			wantTokens: nil,
+			wantErr:    "both integer and fractional parts are empty at position 1",
 		},
 
 		// asterisk
@@ -224,6 +236,12 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+		{
+			name:       "asterisk with error (integer and fractional parts are empty)",
+			args:       args{code: ".*23"},
+			wantTokens: nil,
+			wantErr:    "both integer and fractional parts are empty at position 1",
+		},
 
 		// slash
 		{
@@ -273,6 +291,12 @@ func TestTokenize(test *testing.T) {
 				{Kind: IdentifierToken, Value: "two"},
 			},
 			wantErr: "",
+		},
+		{
+			name:       "slash with error (integer and fractional parts are empty)",
+			args:       args{code: "./23"},
+			wantTokens: nil,
+			wantErr:    "both integer and fractional parts are empty at position 1",
 		},
 
 		// percent
@@ -324,6 +348,12 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+		{
+			name:       "percent with error (integer and fractional parts are empty)",
+			args:       args{code: ".%23"},
+			wantTokens: nil,
+			wantErr:    "both integer and fractional parts are empty at position 1",
+		},
 
 		// exponentiation
 		{
@@ -373,6 +403,12 @@ func TestTokenize(test *testing.T) {
 				{Kind: IdentifierToken, Value: "two"},
 			},
 			wantErr: "",
+		},
+		{
+			name:       "exponentiation with error (integer and fractional parts are empty)",
+			args:       args{code: ".^23"},
+			wantTokens: nil,
+			wantErr:    "both integer and fractional parts are empty at position 1",
 		},
 
 		{
