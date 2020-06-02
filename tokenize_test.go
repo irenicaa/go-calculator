@@ -242,6 +242,12 @@ func TestTokenize(test *testing.T) {
 			wantTokens: nil,
 			wantErr:    "both integer and fractional parts are empty at position 1",
 		},
+		{
+			name:       "asterisk with error (exponent part are empty)",
+			args:       args{code: "23e*42"},
+			wantTokens: nil,
+			wantErr:    "empty exponent part at position 3",
+		},
 
 		// slash
 		{
@@ -297,6 +303,12 @@ func TestTokenize(test *testing.T) {
 			args:       args{code: "./23"},
 			wantTokens: nil,
 			wantErr:    "both integer and fractional parts are empty at position 1",
+		},
+		{
+			name:       "slash with error (exponent part are empty)",
+			args:       args{code: "23e/42"},
+			wantTokens: nil,
+			wantErr:    "empty exponent part at position 3",
 		},
 
 		// percent
@@ -354,6 +366,12 @@ func TestTokenize(test *testing.T) {
 			wantTokens: nil,
 			wantErr:    "both integer and fractional parts are empty at position 1",
 		},
+		{
+			name:       "percent with error (exponent part are empty)",
+			args:       args{code: "23e%42"},
+			wantTokens: nil,
+			wantErr:    "empty exponent part at position 3",
+		},
 
 		// exponentiation
 		{
@@ -409,6 +427,12 @@ func TestTokenize(test *testing.T) {
 			args:       args{code: ".^23"},
 			wantTokens: nil,
 			wantErr:    "both integer and fractional parts are empty at position 1",
+		},
+		{
+			name:       "exponentiation with error (exponent part are empty)",
+			args:       args{code: "23e^42"},
+			wantTokens: nil,
+			wantErr:    "empty exponent part at position 3",
 		},
 
 		{
