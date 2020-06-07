@@ -80,7 +80,45 @@ func TestTokenize(test *testing.T) {
 			wantTokens: []Token{{Kind: IdentifierToken, Value: "test_23"}},
 			wantErr:    "",
 		},
-
+		{
+			name: "identifier with integers",
+			args: args{code: "23test"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23"},
+				{Kind: IdentifierToken, Value: "test"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "identifier with fractionals",
+			args: args{code: "23.5test"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5"},
+				{Kind: IdentifierToken, Value: "test"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "identifier with exponents",
+			args: args{code: "23.5e10test"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5e10"},
+				{Kind: IdentifierToken, Value: "test"},
+			},
+			wantErr: "",
+		},
+		{
+			name:       "identifier with error (integer and fractional parts are empty)",
+			args:       args{code: ".test"},
+			wantTokens: nil,
+			wantErr:    "both integer and fractional parts are empty at position 1",
+		},
+		{
+			name:       "identifier with error (exponent part are empty)",
+			args:       args{code: "23etest"},
+			wantTokens: nil,
+			wantErr:    "empty exponent part at position 3",
+		},
 		// plus
 		{
 			name:       "plus",
