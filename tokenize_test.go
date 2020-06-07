@@ -37,7 +37,13 @@ func TestTokenize(test *testing.T) {
 			wantErr:    "",
 		},
 		{
-			name:       "exponent",
+			name:       "exponent with integers",
+			args:       args{code: "23e10"},
+			wantTokens: []Token{{Kind: NumberToken, Value: "23e10"}},
+			wantErr:    "",
+		},
+		{
+			name:       "exponent with fractionals",
 			args:       args{code: "23.42e10"},
 			wantTokens: []Token{{Kind: NumberToken, Value: "23.42e10"}},
 			wantErr:    "",
