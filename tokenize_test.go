@@ -436,6 +436,43 @@ func TestTokenize(test *testing.T) {
 			},
 			wantErr: "",
 		},
+
+		{
+			name:       "error with a fractional point after fractional part",
+			args:       args{code: "23.42."},
+			wantTokens: nil,
+			wantErr:    "unexpected fractional point at position 5",
+		},
+		{
+			name:       "error with a fractional point after exponent part",
+			args:       args{code: "23.42e10."},
+			wantTokens: nil,
+			wantErr:    "unexpected fractional point at position 8",
+		},
+		{
+			name:       "error with a fractional point after identifier part",
+			args:       args{code: "test."},
+			wantTokens: nil,
+			wantErr:    "unexpected fractional point at position 4",
+		},
+		{
+			name:       "error with an unknown symbol",
+			args:       args{code: "23!"},
+			wantTokens: nil,
+			wantErr:    "unknown symbol '!' at position 2",
+		},
+		{
+			name:       "error with empty integer and fractional parts at EOI",
+			args:       args{code: "."},
+			wantTokens: nil,
+			wantErr:    "both integer and fractional parts are empty at EOI",
+		},
+		{
+			name:       "error with an empty exponent part at EOI",
+			args:       args{code: "23.42e"},
+			wantTokens: nil,
+			wantErr:    "empty exponent part at EOI",
+		},
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
