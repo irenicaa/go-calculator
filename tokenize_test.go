@@ -113,7 +113,7 @@ func TestTokenize(test *testing.T) {
 			wantErr: "",
 		},
 		{
-			name: "plus with identifer",
+			name: "plus with identifers",
 			args: args{code: "one+two"},
 			wantTokens: []Token{
 				{Kind: IdentifierToken, Value: "one"},
@@ -167,7 +167,7 @@ func TestTokenize(test *testing.T) {
 			wantErr: "",
 		},
 		{
-			name: "minus with identifer",
+			name: "minus with identifers",
 			args: args{code: "one-two"},
 			wantTokens: []Token{
 				{Kind: IdentifierToken, Value: "one"},
@@ -221,7 +221,7 @@ func TestTokenize(test *testing.T) {
 			wantErr: "",
 		},
 		{
-			name: "asterisk with identifer",
+			name: "asterisk with identifers",
 			args: args{code: "one*two"},
 			wantTokens: []Token{
 				{Kind: IdentifierToken, Value: "one"},
@@ -281,7 +281,7 @@ func TestTokenize(test *testing.T) {
 			wantErr: "",
 		},
 		{
-			name: "slash with identifer",
+			name: "slash with identifers",
 			args: args{code: "one/two"},
 			wantTokens: []Token{
 				{Kind: IdentifierToken, Value: "one"},
@@ -341,7 +341,7 @@ func TestTokenize(test *testing.T) {
 			wantErr: "",
 		},
 		{
-			name: "percent with identifer",
+			name: "percent with identifers",
 			args: args{code: "one%two"},
 			wantTokens: []Token{
 				{Kind: IdentifierToken, Value: "one"},
@@ -401,7 +401,7 @@ func TestTokenize(test *testing.T) {
 			wantErr: "",
 		},
 		{
-			name: "exponentiation with identifer",
+			name: "exponentiation with identifers",
 			args: args{code: "one^two"},
 			wantTokens: []Token{
 				{Kind: IdentifierToken, Value: "one"},
