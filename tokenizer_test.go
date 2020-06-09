@@ -681,7 +681,8 @@ func TestTokenize(test *testing.T) {
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			gotTokens, gotErr := Tokenize(testCase.args.code)
+			tokenizer := Tokenizer{}
+			gotTokens, gotErr := tokenizer.Tokenize(testCase.args.code)
 
 			assert.Equal(test, testCase.wantTokens, gotTokens)
 			if testCase.wantErr == "" {

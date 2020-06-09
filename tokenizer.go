@@ -40,8 +40,11 @@ type Token struct {
 	Value string
 }
 
+// Tokinizer ...
+type Tokenizer struct{}
+
 // Tokenize ...
-func Tokenize(code string) ([]Token, error) {
+func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 	tokens := []Token{}
 	state := defaultTokenizerState
 	buffer := ""
