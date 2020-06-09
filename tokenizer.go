@@ -58,7 +58,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]Token, error) {
 			tokenizer.buffer += string(symbol)
 		case unicode.IsLetter(symbol) || symbol == '_':
 			if tokenizer.state == integerPartTokenizerState || tokenizer.state == fractionalPartTokenizerState {
-				if tokenizer.buffer == "." {
+				if tokenizer.areIntegerAndFractionalEmpty() {
 					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 				}
 				if symbol == 'e' || symbol == 'E' {
@@ -83,7 +83,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]Token, error) {
 			}
 			tokenizer.state = defaultTokenizerState
 		case symbol == '+':
-			if tokenizer.buffer == "." {
+			if tokenizer.areIntegerAndFractionalEmpty() {
 				return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 			}
 			if tokenizer.state == integerPartTokenizerState || tokenizer.state == fractionalPartTokenizerState {
@@ -104,7 +104,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]Token, error) {
 			tokenizer.state = defaultTokenizerState
 		case symbol == '-':
 			if tokenizer.state == integerPartTokenizerState || tokenizer.state == fractionalPartTokenizerState {
-				if tokenizer.buffer == "." {
+				if tokenizer.areIntegerAndFractionalEmpty() {
 					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 				}
 				tokenizer.addTokenFromBuffer(NumberToken)
@@ -197,7 +197,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]Token, error) {
 		}
 	}
 	if tokenizer.state == integerPartTokenizerState || tokenizer.state == fractionalPartTokenizerState {
-		if tokenizer.buffer == "." {
+		if tokenizer.areIntegerAndFractionalEmpty() {
 			return nil, errors.New("both integer and fractional parts are empty at EOI")
 		}
 		tokenizer.addTokenFromBuffer(NumberToken)
