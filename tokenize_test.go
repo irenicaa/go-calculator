@@ -582,6 +582,60 @@ func TestTokenize(test *testing.T) {
 			wantErr:    "empty exponent part at position 6",
 		},
 
+		//comma
+		{
+			name: "comma with integers",
+			args: args{code: "23,42"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23"},
+				{Kind: CommaToken, Value: ","},
+				{Kind: NumberToken, Value: "42"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "comma with fractionals",
+			args: args{code: "23.5,42.5"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5"},
+				{Kind: CommaToken, Value: ","},
+				{Kind: NumberToken, Value: "42.5"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "comma with exponents",
+			args: args{code: "23.5e10,42.5e10"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5e10"},
+				{Kind: CommaToken, Value: ","},
+				{Kind: NumberToken, Value: "42.5e10"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "comma with identifers",
+			args: args{code: "one,two"},
+			wantTokens: []Token{
+				{Kind: IdentifierToken, Value: "one"},
+				{Kind: CommaToken, Value: ","},
+				{Kind: IdentifierToken, Value: "two"},
+			},
+			wantErr: "",
+		},
+		{
+			name:       "comma with error (integer and fractional parts are empty)",
+			args:       args{code: ".,23"},
+			wantTokens: nil,
+			wantErr:    "both integer and fractional parts are empty at position 1",
+		},
+		{
+			name:       "comma with error (exponent part are empty)",
+			args:       args{code: "23e,42"},
+			wantTokens: nil,
+			wantErr:    "empty exponent part at position 3",
+		},
+
 		{
 			name:       "error with a fractional point after fractional part",
 			args:       args{code: "23.42."},
