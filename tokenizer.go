@@ -69,8 +69,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]Token, error) {
 				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
-				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
-				if lastSymbol == 'e' || lastSymbol == 'E' {
+				if tokenizer.isExponentEmpty() {
 					return nil, fmt.Errorf("empty exponent part at position %d", index)
 				}
 				tokenizer.addTokenFromBuffer(NumberToken)
@@ -91,8 +90,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]Token, error) {
 				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
-				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
-				if lastSymbol == 'e' || lastSymbol == 'E' {
+				if tokenizer.isExponentEmpty() {
 					tokenizer.buffer += string(symbol)
 					break
 				}
@@ -112,8 +110,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]Token, error) {
 				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
-				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
-				if lastSymbol == 'e' || lastSymbol == 'E' {
+				if tokenizer.isExponentEmpty() {
 					tokenizer.buffer += string(symbol)
 					break
 				}
@@ -206,10 +203,10 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]Token, error) {
 		tokenizer.addTokenFromBuffer(NumberToken)
 	}
 	if tokenizer.state == exponentTokenizerState {
-		lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
-		if lastSymbol == 'e' || lastSymbol == 'E' {
+		if tokenizer.isExponentEmpty() {
 			return nil, errors.New("empty exponent part at EOI")
 		}
+
 		tokenizer.addTokenFromBuffer(NumberToken)
 	}
 	if tokenizer.state == identifierTokenizerState {
@@ -243,8 +240,7 @@ func (tokenizer *Tokenizer) resetBuffer(symbolIndex int) error {
 
 		tokenizer.addTokenFromBuffer(NumberToken)
 	case exponentTokenizerState:
-		lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
-		if lastSymbol == 'e' || lastSymbol == 'E' {
+		if tokenizer.isExponentEmpty() {
 			return fmt.Errorf("empty exponent part at position %d", symbolIndex)
 		}
 
