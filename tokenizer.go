@@ -314,3 +314,28 @@ func (tokenizer *Tokenizer) addTokenFromBuffer(kind TokenKind) {
 
 	tokenizer.buffer = ""
 }
+
+func (tokenizer *Tokenizer) resetBuffer(symbolIndex int) error {
+	switch tokenizer.state {
+	case integerPartTokenizerState, fractionalPartTokenizerState:
+		if tokenizer.buffer == "." {
+			return fmt.Errorf(
+				"both integer and fractional parts are empty at position %d",
+				symbolIndex,
+			)
+		}
+
+		tokenizer.addTokenFromBuffer(NumberToken)
+	case exponentTokenizerState:
+		lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
+		if lastSymbol == 'e' || lastSymbol == 'E' {
+			return fmt.Errorf("empty exponent part at position %d", symbolIndex)
+		}
+
+		tokenizer.addTokenFromBuffer(NumberToken)
+	case identifierTokenizerState:
+		tokenizer.addTokenFromBuffer(IdentifierToken)
+	}
+
+	return nil
+}
