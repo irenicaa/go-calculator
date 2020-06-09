@@ -83,10 +83,10 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]Token, error) {
 			}
 			tokenizer.state = defaultTokenizerState
 		case symbol == '+':
-			if tokenizer.areIntegerAndFractionalEmpty() {
-				return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
-			}
 			if tokenizer.state == integerPartTokenizerState || tokenizer.state == fractionalPartTokenizerState {
+				if tokenizer.areIntegerAndFractionalEmpty() {
+					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
+				}
 				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
