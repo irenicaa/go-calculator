@@ -119,6 +119,57 @@ func TestTokenize(test *testing.T) {
 			wantTokens: nil,
 			wantErr:    "empty exponent part at position 3",
 		},
+
+		//space
+		{
+			name: "space with integers",
+			args: args{code: "23 42"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23"},
+				{Kind: NumberToken, Value: "42"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "space with fractionals",
+			args: args{code: "23.5 42.5"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5"},
+				{Kind: NumberToken, Value: "42.5"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "space with exponents",
+			args: args{code: "23.5e10 42.5e10"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5e10"},
+				{Kind: NumberToken, Value: "42.5e10"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "space with identifers",
+			args: args{code: "one two"},
+			wantTokens: []Token{
+				{Kind: IdentifierToken, Value: "one"},
+				{Kind: IdentifierToken, Value: "two"},
+			},
+			wantErr: "",
+		},
+		{
+			name:       "space with error (integer and fractional parts are empty)",
+			args:       args{code: ". 23"},
+			wantTokens: nil,
+			wantErr:    "both integer and fractional parts are empty at position 1",
+		},
+		{
+			name:       "space with error (exponent part are empty)",
+			args:       args{code: "23e 42"},
+			wantTokens: nil,
+			wantErr:    "empty exponent part at position 3",
+		},
+
 		// plus
 		{
 			name:       "plus",
