@@ -518,18 +518,68 @@ func TestTokenize(test *testing.T) {
 			wantErr:    "empty exponent part at position 3",
 		},
 
+		//parentheses
 		{
-			name: "parentheses and comma",
-			args: args{code: "test(one,two)"},
+			name: "parentheses with integers",
+			args: args{code: "23(42)"},
 			wantTokens: []Token{
-				{Kind: IdentifierToken, Value: "test"},
+				{Kind: NumberToken, Value: "23"},
 				{Kind: LeftParenthesisToken, Value: "("},
+				{Kind: NumberToken, Value: "42"},
+				{Kind: RightParenthesisToken, Value: ")"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "parentheses with fractionals",
+			args: args{code: "23.5(42.5)"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5"},
+				{Kind: LeftParenthesisToken, Value: "("},
+				{Kind: NumberToken, Value: "42.5"},
+				{Kind: RightParenthesisToken, Value: ")"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "parentheses with exponents",
+			args: args{code: "23.5e10(42.5e10)"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23.5e10"},
+				{Kind: LeftParenthesisToken, Value: "("},
+				{Kind: NumberToken, Value: "42.5e10"},
+				{Kind: RightParenthesisToken, Value: ")"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "parentheses with identifers",
+			args: args{code: "one(two)"},
+			wantTokens: []Token{
 				{Kind: IdentifierToken, Value: "one"},
-				{Kind: CommaToken, Value: ","},
+				{Kind: LeftParenthesisToken, Value: "("},
 				{Kind: IdentifierToken, Value: "two"},
 				{Kind: RightParenthesisToken, Value: ")"},
 			},
 			wantErr: "",
+		},
+		{
+			name:       "left parenthesis with error (integer and fractional parts are empty)",
+			args:       args{code: ".(23)"},
+			wantTokens: nil,
+			wantErr:    "both integer and fractional parts are empty at position 1",
+		},
+		{
+			name:       "left parenthesis with error (exponent part are empty)",
+			args:       args{code: "23e(42)"},
+			wantTokens: nil,
+			wantErr:    "empty exponent part at position 3",
+		},
+		{
+			name:       "left parenthesis with error (exponent part are empty)",
+			args:       args{code: "23(42e)"},
+			wantTokens: nil,
+			wantErr:    "empty exponent part at position 6",
 		},
 
 		{
