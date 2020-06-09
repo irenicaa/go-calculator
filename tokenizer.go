@@ -226,6 +226,11 @@ func (tokenizer *Tokenizer) addTokenFromBuffer(kind TokenKind) {
 	tokenizer.buffer = ""
 }
 
+func (tokenizer Tokenizer) isExponentEmpty() bool {
+	lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
+	return lastSymbol == 'e' || lastSymbol == 'E'
+}
+
 func (tokenizer *Tokenizer) resetBuffer(symbolIndex int) error {
 	switch tokenizer.state {
 	case integerPartTokenizerState, fractionalPartTokenizerState:
