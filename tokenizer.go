@@ -40,7 +40,7 @@ type Token struct {
 	Value string
 }
 
-// Tokinizer ...
+// Tokenizer ...
 type Tokenizer struct {
 	tokens []Token
 	state  tokenizerState
@@ -373,4 +373,11 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 	}
 
 	return tokenizer.tokens, nil
+}
+
+func (tokenizer *Tokenizer) addTokenFromBuffer(kind TokenKind) {
+	token := Token{kind, tokenizer.buffer}
+	tokenizer.tokens = append(tokenizer.tokens, token)
+
+	tokenizer.buffer = ""
 }
