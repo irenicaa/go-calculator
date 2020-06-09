@@ -120,7 +120,7 @@ func TestTokenize(test *testing.T) {
 			wantErr:    "empty exponent part at position 3",
 		},
 
-		//space
+		// space
 		{
 			name: "space with integers",
 			args: args{code: "23 42"},
@@ -518,7 +518,7 @@ func TestTokenize(test *testing.T) {
 			wantErr:    "empty exponent part at position 3",
 		},
 
-		//parentheses
+		// parentheses
 		{
 			name: "parentheses with integers",
 			args: args{code: "23(42)"},
@@ -570,19 +570,25 @@ func TestTokenize(test *testing.T) {
 			wantErr:    "both integer and fractional parts are empty at position 1",
 		},
 		{
+			name:       "right parenthesis with error (integer and fractional parts are empty)",
+			args:       args{code: "23(.)"},
+			wantTokens: nil,
+			wantErr:    "both integer and fractional parts are empty at position 4",
+		},
+		{
 			name:       "left parenthesis with error (exponent part are empty)",
 			args:       args{code: "23e(42)"},
 			wantTokens: nil,
 			wantErr:    "empty exponent part at position 3",
 		},
 		{
-			name:       "left parenthesis with error (exponent part are empty)",
+			name:       "right parenthesis with error (exponent part are empty)",
 			args:       args{code: "23(42e)"},
 			wantTokens: nil,
 			wantErr:    "empty exponent part at position 6",
 		},
 
-		//comma
+		// comma
 		{
 			name: "comma with integers",
 			args: args{code: "23,42"},
