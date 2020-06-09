@@ -48,7 +48,7 @@ type Tokenizer struct {
 }
 
 // Tokenize ...
-func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
+func (tokenizer *Tokenizer) Tokenize(code string) ([]Token, error) {
 	for index, symbol := range code {
 		switch {
 		case unicode.IsDigit(symbol):
@@ -66,18 +66,14 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 					tokenizer.buffer += string(symbol)
 					break
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
 				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
 				if lastSymbol == 'e' || lastSymbol == 'E' {
 					return nil, fmt.Errorf("empty exponent part at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			tokenizer.state = identifierTokenizerState
 			tokenizer.buffer += string(symbol)
@@ -86,23 +82,17 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 				if tokenizer.buffer == "." {
 					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
 				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
 				if lastSymbol == 'e' || lastSymbol == 'E' {
 					return nil, fmt.Errorf("empty exponent part at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == identifierTokenizerState {
-				token := Token{IdentifierToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(IdentifierToken)
 			}
 			tokenizer.state = defaultTokenizerState
 		case symbol == '+':
@@ -110,9 +100,7 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 				return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 			}
 			if tokenizer.state == integerPartTokenizerState || tokenizer.state == fractionalPartTokenizerState {
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
 				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
@@ -120,14 +108,10 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 					tokenizer.buffer += string(symbol)
 					break
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == identifierTokenizerState {
-				token := Token{IdentifierToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(IdentifierToken)
 			}
 			token := Token{PlusToken, string(symbol)}
 			tokenizer.tokens = append(tokenizer.tokens, token)
@@ -137,9 +121,7 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 				if tokenizer.buffer == "." {
 					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
 				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
@@ -147,14 +129,10 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 					tokenizer.buffer += string(symbol)
 					break
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == identifierTokenizerState {
-				token := Token{IdentifierToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(IdentifierToken)
 			}
 			token := Token{MinusToken, string(symbol)}
 			tokenizer.tokens = append(tokenizer.tokens, token)
@@ -164,23 +142,17 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 				if tokenizer.buffer == "." {
 					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
 				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
 				if lastSymbol == 'e' || lastSymbol == 'E' {
 					return nil, fmt.Errorf("empty exponent part at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == identifierTokenizerState {
-				token := Token{IdentifierToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(IdentifierToken)
 			}
 			token := Token{AsteriskToken, string(symbol)}
 			tokenizer.tokens = append(tokenizer.tokens, token)
@@ -190,23 +162,17 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 				if tokenizer.buffer == "." {
 					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
 				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
 				if lastSymbol == 'e' || lastSymbol == 'E' {
 					return nil, fmt.Errorf("empty exponent part at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == identifierTokenizerState {
-				token := Token{IdentifierToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(IdentifierToken)
 			}
 			token := Token{SlashToken, string(symbol)}
 			tokenizer.tokens = append(tokenizer.tokens, token)
@@ -216,23 +182,17 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 				if tokenizer.buffer == "." {
 					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
 				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
 				if lastSymbol == 'e' || lastSymbol == 'E' {
 					return nil, fmt.Errorf("empty exponent part at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == identifierTokenizerState {
-				token := Token{IdentifierToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(IdentifierToken)
 			}
 			token := Token{PercentToken, string(symbol)}
 			tokenizer.tokens = append(tokenizer.tokens, token)
@@ -242,23 +202,17 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 				if tokenizer.buffer == "." {
 					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
 				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
 				if lastSymbol == 'e' || lastSymbol == 'E' {
 					return nil, fmt.Errorf("empty exponent part at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == identifierTokenizerState {
-				token := Token{IdentifierToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(IdentifierToken)
 			}
 			token := Token{ExponentiationToken, string(symbol)}
 			tokenizer.tokens = append(tokenizer.tokens, token)
@@ -268,23 +222,17 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 				if tokenizer.buffer == "." {
 					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
 				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
 				if lastSymbol == 'e' || lastSymbol == 'E' {
 					return nil, fmt.Errorf("empty exponent part at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == identifierTokenizerState {
-				token := Token{IdentifierToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(IdentifierToken)
 			}
 			token := Token{LeftParenthesisToken, string(symbol)}
 			tokenizer.tokens = append(tokenizer.tokens, token)
@@ -294,23 +242,17 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 				if tokenizer.buffer == "." {
 					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
 				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
 				if lastSymbol == 'e' || lastSymbol == 'E' {
 					return nil, fmt.Errorf("empty exponent part at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == identifierTokenizerState {
-				token := Token{IdentifierToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(IdentifierToken)
 			}
 			token := Token{RightParenthesisToken, string(symbol)}
 			tokenizer.tokens = append(tokenizer.tokens, token)
@@ -320,23 +262,17 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 				if tokenizer.buffer == "." {
 					return nil, fmt.Errorf("both integer and fractional parts are empty at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == exponentTokenizerState {
 				lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
 				if lastSymbol == 'e' || lastSymbol == 'E' {
 					return nil, fmt.Errorf("empty exponent part at position %d", index)
 				}
-				token := Token{NumberToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 			if tokenizer.state == identifierTokenizerState {
-				token := Token{IdentifierToken, tokenizer.buffer}
-				tokenizer.tokens = append(tokenizer.tokens, token)
-				tokenizer.buffer = ""
+				tokenizer.addTokenFromBuffer(IdentifierToken)
 			}
 			token := Token{CommaToken, string(symbol)}
 			tokenizer.tokens = append(tokenizer.tokens, token)
@@ -356,20 +292,17 @@ func (tokenizer Tokenizer) Tokenize(code string) ([]Token, error) {
 		if tokenizer.buffer == "." {
 			return nil, errors.New("both integer and fractional parts are empty at EOI")
 		}
-		token := Token{NumberToken, tokenizer.buffer}
-		tokenizer.tokens = append(tokenizer.tokens, token)
+		tokenizer.addTokenFromBuffer(NumberToken)
 	}
 	if tokenizer.state == exponentTokenizerState {
 		lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
 		if lastSymbol == 'e' || lastSymbol == 'E' {
 			return nil, errors.New("empty exponent part at EOI")
 		}
-		token := Token{NumberToken, tokenizer.buffer}
-		tokenizer.tokens = append(tokenizer.tokens, token)
+		tokenizer.addTokenFromBuffer(NumberToken)
 	}
 	if tokenizer.state == identifierTokenizerState {
-		token := Token{IdentifierToken, tokenizer.buffer}
-		tokenizer.tokens = append(tokenizer.tokens, token)
+		tokenizer.addTokenFromBuffer(IdentifierToken)
 	}
 
 	return tokenizer.tokens, nil
