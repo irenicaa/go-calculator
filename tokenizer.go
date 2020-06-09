@@ -223,6 +223,10 @@ func (tokenizer *Tokenizer) addTokenFromBuffer(kind TokenKind) {
 	tokenizer.buffer = ""
 }
 
+func (tokenizer Tokenizer) areIntegerAndFractionalEmpty() bool {
+	return tokenizer.buffer == "."
+}
+
 func (tokenizer Tokenizer) isExponentEmpty() bool {
 	lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
 	return lastSymbol == 'e' || lastSymbol == 'E'
