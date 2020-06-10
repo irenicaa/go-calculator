@@ -235,7 +235,7 @@ func (tokenizer Tokenizer) isExponentEmpty() bool {
 func (tokenizer *Tokenizer) resetBuffer(symbolIndex int) error {
 	switch tokenizer.state {
 	case integerPartTokenizerState, fractionalPartTokenizerState:
-		if tokenizer.buffer == "." {
+		if tokenizer.areIntegerAndFractionalEmpty() {
 			return fmt.Errorf(
 				"both integer and fractional parts are empty at position %d",
 				symbolIndex,
