@@ -11,5 +11,5 @@ func (position position) String() string {
 		return "EOI"
 	}
 
-	return strconv.Itoa(int(position))
+	return "position " + strconv.Itoa(int(position))
 }
