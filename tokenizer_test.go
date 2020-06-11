@@ -570,10 +570,13 @@ func TestTokenize(test *testing.T) {
 			wantErr:    "both integer and fractional parts are empty at position 1",
 		},
 		{
-			name:       "right parenthesis with error (integer and fractional parts are empty)",
-			args:       args{code: "23(.)"},
-			wantTokens: nil,
-			wantErr:    "both integer and fractional parts are empty at position 4",
+			name: "right parenthesis with error (integer and fractional parts are empty)",
+			args: args{code: "23(.)"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23"},
+				{Kind: LeftParenthesisToken, Value: "("},
+			},
+			wantErr: "both integer and fractional parts are empty at position 4",
 		},
 		{
 			name:       "left parenthesis with error (exponent part are empty)",
@@ -582,10 +585,13 @@ func TestTokenize(test *testing.T) {
 			wantErr:    "empty exponent part at position 3",
 		},
 		{
-			name:       "right parenthesis with error (exponent part are empty)",
-			args:       args{code: "23(42e)"},
-			wantTokens: nil,
-			wantErr:    "empty exponent part at position 6",
+			name: "right parenthesis with error (exponent part are empty)",
+			args: args{code: "23(42e)"},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23"},
+				{Kind: LeftParenthesisToken, Value: "("},
+			},
+			wantErr: "empty exponent part at position 6",
 		},
 
 		// comma
@@ -642,6 +648,7 @@ func TestTokenize(test *testing.T) {
 			wantErr:    "empty exponent part at position 3",
 		},
 
+		// misc. errors
 		{
 			name:       "error with a fractional point after fractional part",
 			args:       args{code: "23.42."},
@@ -682,7 +689,8 @@ func TestTokenize(test *testing.T) {
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			tokenizer := Tokenizer{}
-			gotTokens, gotErr := tokenizer.Tokenize(testCase.args.code)
+			gotErr := tokenizer.Tokenize(testCase.args.code)
+			gotTokens := tokenizer.Tokens()
 
 			assert.Equal(test, testCase.wantTokens, gotTokens)
 			if testCase.wantErr == "" {
