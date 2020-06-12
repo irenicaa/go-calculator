@@ -43,7 +43,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 				tokenizer.state = integerPartTokenizerState
 			}
 			tokenizer.buffer += string(symbol)
-		case unicode.IsLetter(symbol) || symbol == '_':
+		case unicode.IsLetter(symbol), symbol == '_':
 			switch tokenizer.state {
 			case integerPartTokenizerState, fractionalPartTokenizerState:
 				if tokenizer.areIntegerAndFractionalEmpty() {
@@ -76,15 +76,15 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 			}
 
 			tokenizer.state = defaultTokenizerState
-		case symbol == '+' || symbol == '-':
+		case symbol == '+', symbol == '-':
 			if tokenizer.state == exponentTokenizerState && tokenizer.isExponentEmpty() {
 				tokenizer.buffer += string(symbol)
 				continue
 			}
 
 			fallthrough
-		case symbol == '*' || symbol == '/' || symbol == '%' || symbol == '^' ||
-			symbol == '(' || symbol == ')' || symbol == ',':
+		case symbol == '*', symbol == '/', symbol == '%', symbol == '^',
+			symbol == '(', symbol == ')', symbol == ',':
 			err := tokenizer.resetBuffer(position)
 			if err != nil {
 				return err
@@ -92,7 +92,8 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 
 			tokenizer.addTokenFromSymbol(symbol)
 		case symbol == '.':
-			if tokenizer.state == defaultTokenizerState || tokenizer.state == integerPartTokenizerState {
+			if tokenizer.state == defaultTokenizerState ||
+				tokenizer.state == integerPartTokenizerState {
 				tokenizer.state = fractionalPartTokenizerState
 				tokenizer.buffer += string(symbol)
 				continue
@@ -127,6 +128,7 @@ func (tokenizer *Tokenizer) addTokenFromSymbol(symbol rune) {
 	kind, _ := ParseTokenKind(symbol)
 	token := Token{kind, string(symbol)}
 	tokenizer.tokens = append(tokenizer.tokens, token)
+
 	tokenizer.state = defaultTokenizerState
 }
 
