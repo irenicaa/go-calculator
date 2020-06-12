@@ -114,55 +114,14 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 			}
 
 			tokenizer.addTokenFromSymbol('-')
-		case symbol == '*':
+		case symbol == '*' || symbol == '/' || symbol == '%' || symbol == '^' ||
+			symbol == '(' || symbol == ')' || symbol == ',':
 			err := tokenizer.resetBuffer(position)
 			if err != nil {
 				return err
 			}
 
-			tokenizer.addTokenFromSymbol('*')
-		case symbol == '/':
-			err := tokenizer.resetBuffer(position)
-			if err != nil {
-				return err
-			}
-
-			tokenizer.addTokenFromSymbol('/')
-		case symbol == '%':
-			err := tokenizer.resetBuffer(position)
-			if err != nil {
-				return err
-			}
-
-			tokenizer.addTokenFromSymbol('%')
-		case symbol == '^':
-			err := tokenizer.resetBuffer(position)
-			if err != nil {
-				return err
-			}
-
-			tokenizer.addTokenFromSymbol('^')
-		case symbol == '(':
-			err := tokenizer.resetBuffer(position)
-			if err != nil {
-				return err
-			}
-
-			tokenizer.addTokenFromSymbol('(')
-		case symbol == ')':
-			err := tokenizer.resetBuffer(position)
-			if err != nil {
-				return err
-			}
-
-			tokenizer.addTokenFromSymbol(')')
-		case symbol == ',':
-			err := tokenizer.resetBuffer(position)
-			if err != nil {
-				return err
-			}
-
-			tokenizer.addTokenFromSymbol(',')
+			tokenizer.addTokenFromSymbol(symbol)
 		case symbol == '.':
 			if tokenizer.state == defaultTokenizerState || tokenizer.state == integerPartTokenizerState {
 				tokenizer.state = fractionalPartTokenizerState
