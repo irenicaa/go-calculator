@@ -77,24 +77,12 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 
 			tokenizer.state = defaultTokenizerState
 		case symbol == '+' || symbol == '-':
-			if tokenizer.state == integerPartTokenizerState || tokenizer.state == fractionalPartTokenizerState {
-				if tokenizer.areIntegerAndFractionalEmpty() {
-					return fmt.Errorf("both integer and fractional parts are empty at position %d", index)
-				}
-				tokenizer.addTokenFromBuffer(NumberToken)
-			}
-			if tokenizer.state == exponentTokenizerState {
-				if tokenizer.isExponentEmpty() {
-					tokenizer.buffer += string(symbol)
-					continue
-				}
-				tokenizer.addTokenFromBuffer(NumberToken)
-			}
-			if tokenizer.state == identifierTokenizerState {
-				tokenizer.addTokenFromBuffer(IdentifierToken)
+			if tokenizer.state == exponentTokenizerState && tokenizer.isExponentEmpty() {
+				tokenizer.buffer += string(symbol)
+				continue
 			}
 
-			tokenizer.addTokenFromSymbol(symbol)
+			fallthrough
 		case symbol == '*' || symbol == '/' || symbol == '%' || symbol == '^' ||
 			symbol == '(' || symbol == ')' || symbol == ',':
 			err := tokenizer.resetBuffer(position)

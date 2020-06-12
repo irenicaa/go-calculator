@@ -54,12 +54,6 @@ func TestParseTokenKind(test *testing.T) {
 			wantErr:       "",
 		},
 		{
-			name:          "default",
-			args:          args{symbol: '!'},
-			wantTokenKind: 0,
-			wantErr:       "unknown symbol '!'",
-		},
-		{
 			name:          "left parenthesis",
 			args:          args{symbol: '('},
 			wantTokenKind: LeftParenthesisToken,
@@ -72,10 +66,16 @@ func TestParseTokenKind(test *testing.T) {
 			wantErr:       "",
 		},
 		{
-			name:          ",",
+			name:          "comma",
 			args:          args{symbol: ','},
 			wantTokenKind: CommaToken,
 			wantErr:       "",
+		},
+		{
+			name:          "error",
+			args:          args{symbol: '!'},
+			wantTokenKind: 0,
+			wantErr:       "unknown symbol '!'",
 		},
 	}
 	for _, testCase := range testsCases {
