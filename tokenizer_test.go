@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTokenize(test *testing.T) {
+func TestTokenizer(test *testing.T) {
 	type args struct {
 		code string
 	}
