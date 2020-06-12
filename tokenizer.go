@@ -92,8 +92,8 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 
 			tokenizer.addTokenFromSymbol(symbol)
 		case symbol == '.':
-			if tokenizer.state == defaultTokenizerState ||
-				tokenizer.state == integerPartTokenizerState {
+			switch tokenizer.state {
+			case defaultTokenizerState, integerPartTokenizerState:
 				tokenizer.state = fractionalPartTokenizerState
 				tokenizer.buffer += string(symbol)
 				continue
