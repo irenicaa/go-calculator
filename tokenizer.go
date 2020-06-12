@@ -2,6 +2,7 @@ package calculator
 
 import (
 	"fmt"
+	"strings"
 	"unicode"
 )
 
@@ -76,15 +77,14 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 			}
 
 			tokenizer.state = defaultTokenizerState
-		case symbol == '+', symbol == '-':
+		case strings.ContainsRune("+-", symbol):
 			if tokenizer.state == exponentTokenizerState && tokenizer.isExponentEmpty() {
 				tokenizer.buffer += string(symbol)
 				continue
 			}
 
 			fallthrough
-		case symbol == '*', symbol == '/', symbol == '%', symbol == '^',
-			symbol == '(', symbol == ')', symbol == ',':
+		case strings.ContainsRune("*/%^(),", symbol):
 			err := tokenizer.resetBuffer(symbolPosition)
 			if err != nil {
 				return err
