@@ -5,24 +5,6 @@ import (
 	"unicode"
 )
 
-// TokenKind ...
-type TokenKind int
-
-// ...
-const (
-	PlusToken TokenKind = iota
-	MinusToken
-	AsteriskToken
-	SlashToken
-	PercentToken
-	ExponentiationToken
-	NumberToken
-	IdentifierToken
-	LeftParenthesisToken
-	RightParenthesisToken
-	CommaToken
-)
-
 type tokenizerState int
 
 const (
