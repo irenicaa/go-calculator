@@ -93,9 +93,8 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 			if tokenizer.state == identifierTokenizerState {
 				tokenizer.addTokenFromBuffer(IdentifierToken)
 			}
-			token := Token{PlusToken, string(symbol)}
-			tokenizer.tokens = append(tokenizer.tokens, token)
-			tokenizer.state = defaultTokenizerState
+
+			tokenizer.addTokenFromSymbol('+')
 		case symbol == '-':
 			if tokenizer.state == integerPartTokenizerState || tokenizer.state == fractionalPartTokenizerState {
 				if tokenizer.areIntegerAndFractionalEmpty() {
@@ -113,72 +112,57 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 			if tokenizer.state == identifierTokenizerState {
 				tokenizer.addTokenFromBuffer(IdentifierToken)
 			}
-			token := Token{MinusToken, string(symbol)}
-			tokenizer.tokens = append(tokenizer.tokens, token)
-			tokenizer.state = defaultTokenizerState
+
+			tokenizer.addTokenFromSymbol('-')
 		case symbol == '*':
 			err := tokenizer.resetBuffer(position)
 			if err != nil {
 				return err
 			}
 
-			token := Token{AsteriskToken, string(symbol)}
-			tokenizer.tokens = append(tokenizer.tokens, token)
-			tokenizer.state = defaultTokenizerState
+			tokenizer.addTokenFromSymbol('*')
 		case symbol == '/':
 			err := tokenizer.resetBuffer(position)
 			if err != nil {
 				return err
 			}
 
-			token := Token{SlashToken, string(symbol)}
-			tokenizer.tokens = append(tokenizer.tokens, token)
-			tokenizer.state = defaultTokenizerState
+			tokenizer.addTokenFromSymbol('/')
 		case symbol == '%':
 			err := tokenizer.resetBuffer(position)
 			if err != nil {
 				return err
 			}
 
-			token := Token{PercentToken, string(symbol)}
-			tokenizer.tokens = append(tokenizer.tokens, token)
-			tokenizer.state = defaultTokenizerState
+			tokenizer.addTokenFromSymbol('%')
 		case symbol == '^':
 			err := tokenizer.resetBuffer(position)
 			if err != nil {
 				return err
 			}
 
-			token := Token{ExponentiationToken, string(symbol)}
-			tokenizer.tokens = append(tokenizer.tokens, token)
-			tokenizer.state = defaultTokenizerState
+			tokenizer.addTokenFromSymbol('^')
 		case symbol == '(':
 			err := tokenizer.resetBuffer(position)
 			if err != nil {
 				return err
 			}
 
-			token := Token{LeftParenthesisToken, string(symbol)}
-			tokenizer.tokens = append(tokenizer.tokens, token)
-			tokenizer.state = defaultTokenizerState
+			tokenizer.addTokenFromSymbol('(')
 		case symbol == ')':
 			err := tokenizer.resetBuffer(position)
 			if err != nil {
 				return err
 			}
 
-			token := Token{RightParenthesisToken, string(symbol)}
-			tokenizer.tokens = append(tokenizer.tokens, token)
-			tokenizer.state = defaultTokenizerState
+			tokenizer.addTokenFromSymbol(')')
 		case symbol == ',':
 			err := tokenizer.resetBuffer(position)
 			if err != nil {
 				return err
 			}
 
-			token := Token{CommaToken, string(symbol)}
-			tokenizer.tokens = append(tokenizer.tokens, token)
-			tokenizer.state = defaultTokenizerState
+			tokenizer.addTokenFromSymbol(',')
 		case symbol == '.':
 			if tokenizer.state == defaultTokenizerState || tokenizer.state == integerPartTokenizerState {
 				tokenizer.state = fractionalPartTokenizerState
