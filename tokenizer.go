@@ -35,8 +35,8 @@ func (tokenizer Tokenizer) Tokens() []Token {
 
 // Tokenize ...
 func (tokenizer *Tokenizer) Tokenize(code string) error {
-	for index, symbol := range code {
-		position := position(index)
+	for symbolIndex, symbol := range code {
+		symbolPosition := position(symbolIndex)
 		switch {
 		case unicode.IsDigit(symbol):
 			if tokenizer.state == defaultTokenizerState {
@@ -49,7 +49,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 				if tokenizer.areIntegerAndFractionalEmpty() {
 					return fmt.Errorf(
 						"both integer and fractional parts are empty at position %d",
-						index,
+						symbolIndex,
 					)
 				}
 				if symbol == 'e' || symbol == 'E' {
@@ -61,7 +61,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 				tokenizer.addTokenFromBuffer(NumberToken)
 			case exponentTokenizerState:
 				if tokenizer.isExponentEmpty() {
-					return fmt.Errorf("empty exponent part at position %d", index)
+					return fmt.Errorf("empty exponent part at position %d", symbolIndex)
 				}
 
 				tokenizer.addTokenFromBuffer(NumberToken)
@@ -70,7 +70,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 			tokenizer.state = identifierTokenizerState
 			tokenizer.buffer += string(symbol)
 		case unicode.IsSpace(symbol):
-			err := tokenizer.resetBuffer(position)
+			err := tokenizer.resetBuffer(symbolPosition)
 			if err != nil {
 				return err
 			}
@@ -85,7 +85,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 			fallthrough
 		case symbol == '*', symbol == '/', symbol == '%', symbol == '^',
 			symbol == '(', symbol == ')', symbol == ',':
-			err := tokenizer.resetBuffer(position)
+			err := tokenizer.resetBuffer(symbolPosition)
 			if err != nil {
 				return err
 			}
@@ -99,9 +99,9 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 				continue
 			}
 
-			return fmt.Errorf("unexpected fractional point at position %d", index)
+			return fmt.Errorf("unexpected fractional point at position %d", symbolIndex)
 		default:
-			return fmt.Errorf("unknown symbol %q at position %d", symbol, index)
+			return fmt.Errorf("unknown symbol %q at position %d", symbol, symbolIndex)
 		}
 	}
 
