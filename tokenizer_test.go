@@ -506,7 +506,8 @@ func TestTokenizer(test *testing.T) {
 			wantErr: "",
 		},
 		{
-			name:       "exponentiation with error (integer and fractional parts are empty)",
+			name: "exponentiation with error" +
+				"(integer and fractional parts are empty)",
 			args:       args{code: ".^23"},
 			wantTokens: nil,
 			wantErr:    "both integer and fractional parts are empty at position 1",
@@ -564,13 +565,15 @@ func TestTokenizer(test *testing.T) {
 			wantErr: "",
 		},
 		{
-			name:       "left parenthesis with error (integer and fractional parts are empty)",
+			name: "left parenthesis with error" +
+				" (integer and fractional parts are empty)",
 			args:       args{code: ".(23)"},
 			wantTokens: nil,
 			wantErr:    "both integer and fractional parts are empty at position 1",
 		},
 		{
-			name: "right parenthesis with error (integer and fractional parts are empty)",
+			name: "right parenthesis with error" +
+				"(integer and fractional parts are empty)",
 			args: args{code: "23(.)"},
 			wantTokens: []Token{
 				{Kind: NumberToken, Value: "23"},
