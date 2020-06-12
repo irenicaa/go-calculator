@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestParseOperation(test *testing.T) {
+func TestParseTokenKind(test *testing.T) {
 	type args struct {
 		symbol rune
 	}
@@ -59,10 +59,28 @@ func TestParseOperation(test *testing.T) {
 			wantTokenKind: 0,
 			wantErr:       "unknown symbol '!'",
 		},
+		{
+			name:          "left parenthesis",
+			args:          args{symbol: '('},
+			wantTokenKind: LeftParenthesisToken,
+			wantErr:       "",
+		},
+		{
+			name:          "right parenthesis",
+			args:          args{symbol: ')'},
+			wantTokenKind: RightParenthesisToken,
+			wantErr:       "",
+		},
+		{
+			name:          ",",
+			args:          args{symbol: ','},
+			wantTokenKind: CommaToken,
+			wantErr:       "",
+		},
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			gotTokenKind, gotErr := ParseOperation(testCase.args.symbol)
+			gotTokenKind, gotErr := ParseTokenKind(testCase.args.symbol)
 
 			assert.Equal(test, testCase.wantTokenKind, gotTokenKind)
 			if testCase.wantErr == "" {

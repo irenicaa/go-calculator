@@ -20,8 +20,8 @@ const (
 	CommaToken
 )
 
-// ParseOperation ...
-func ParseOperation(symbol rune) (TokenKind, error) {
+// ParseTokenKind ...
+func ParseTokenKind(symbol rune) (TokenKind, error) {
 	switch symbol {
 	case '+':
 		return PlusToken, nil
@@ -35,6 +35,12 @@ func ParseOperation(symbol rune) (TokenKind, error) {
 		return PercentToken, nil
 	case '^':
 		return ExponentiationToken, nil
+	case '(':
+		return LeftParenthesisToken, nil
+	case ')':
+		return RightParenthesisToken, nil
+	case ',':
+		return CommaToken, nil
 	default:
 		return 0, fmt.Errorf("unknown symbol %q", symbol)
 	}

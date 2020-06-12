@@ -212,7 +212,7 @@ func (tokenizer *Tokenizer) addTokenFromBuffer(kind TokenKind) {
 }
 
 func (tokenizer *Tokenizer) addTokenFromSymbol(symbol rune) {
-	kind, _ := ParseOperation(symbol)
+	kind, _ := ParseTokenKind(symbol)
 	token := Token{kind, string(symbol)}
 	tokenizer.tokens = append(tokenizer.tokens, token)
 	tokenizer.state = defaultTokenizerState
