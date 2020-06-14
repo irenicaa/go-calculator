@@ -45,3 +45,17 @@ func ParseTokenKind(symbol rune) (TokenKind, error) {
 		return 0, fmt.Errorf("unknown symbol %q", symbol)
 	}
 }
+
+// Precedence ...
+func (kind TokenKind) Precedence() int {
+	switch kind {
+	case PlusToken, MinusToken:
+		return 1
+	case AsteriskToken, SlashToken, PercentToken:
+		return 2
+	case ExponentiationToken:
+		return 3
+	default:
+		return 0
+	}
+}

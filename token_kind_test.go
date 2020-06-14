@@ -91,3 +91,54 @@ func TestParseTokenKind(test *testing.T) {
 		})
 	}
 }
+
+func TestPrecedence(test *testing.T) {
+	testsCases := []struct {
+		name           string
+		kind           TokenKind
+		wantPrecedence int
+	}{
+		{
+			name:           "plus",
+			kind:           PlusToken,
+			wantPrecedence: 1,
+		},
+		{
+			name:           "minus",
+			kind:           MinusToken,
+			wantPrecedence: 1,
+		},
+		{
+			name:           "asteriks",
+			kind:           AsteriskToken,
+			wantPrecedence: 2,
+		},
+		{
+			name:           "slash",
+			kind:           SlashToken,
+			wantPrecedence: 2,
+		},
+		{
+			name:           "percent",
+			kind:           PercentToken,
+			wantPrecedence: 2,
+		},
+		{
+			name:           "exponent",
+			kind:           ExponentiationToken,
+			wantPrecedence: 3,
+		},
+		{
+			name:           "not operation",
+			kind:           LeftParenthesisToken,
+			wantPrecedence: 0,
+		},
+	}
+	for _, testCase := range testsCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			gotPrecedence := testCase.kind.Precedence()
+
+			assert.Equal(test, testCase.wantPrecedence, gotPrecedence)
+		})
+	}
+}
