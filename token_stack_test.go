@@ -45,3 +45,36 @@ func TestPush(test *testing.T) {
 		})
 	}
 }
+
+func TestPop(test *testing.T) {
+	testsCases := []struct {
+		name      string
+		stack     TokenStack
+		wantToken Token
+		wantOk    bool
+	}{
+		{
+			name: "nonempty",
+			stack: []Token{
+				{Kind: NumberToken, Value: "1"},
+				{Kind: NumberToken, Value: "2"},
+			},
+			wantToken: Token{Kind: NumberToken, Value: "2"},
+			wantOk:    true,
+		},
+		{
+			name:      "empty",
+			stack:     []Token{},
+			wantToken: Token{},
+			wantOk:    false,
+		},
+	}
+	for _, testCase := range testsCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			gotToken, gotOk := testCase.stack.Pop()
+
+			assert.Equal(test, testCase.wantToken, gotToken)
+			assert.Equal(test, testCase.wantOk, gotOk)
+		})
+	}
+}
