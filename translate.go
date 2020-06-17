@@ -26,6 +26,9 @@ func Translate(tokens []Token) ([]Command, error) {
 		case NumberToken:
 			command := Command{PushNumberCommand, token.Value}
 			commands = append(commands, command)
+		case IdentifierToken:
+			command := Command{PushVariableCommand, token.Value}
+			commands = append(commands, command)
 		default:
 			return nil, fmt.Errorf(
 				"unknown token %+v with number #%d",
