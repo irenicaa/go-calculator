@@ -9,3 +9,9 @@ const (
 	PushVariableCommand
 	CallFunctionCommand
 )
+
+// Command ...
+type Command struct {
+	Kind    CommandKind
+	Operand string
+}
