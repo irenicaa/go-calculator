@@ -92,7 +92,7 @@ func TestParseTokenKind(test *testing.T) {
 	}
 }
 
-func TestPrecedence(test *testing.T) {
+func TestKind_Precedence(test *testing.T) {
 	testsCases := []struct {
 		name           string
 		kind           TokenKind
