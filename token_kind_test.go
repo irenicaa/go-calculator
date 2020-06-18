@@ -92,6 +92,57 @@ func TestParseTokenKind(test *testing.T) {
 	}
 }
 
+func TestKind_IsOperator(test *testing.T) {
+	testsCases := []struct {
+		name   string
+		kind   TokenKind
+		wantOk bool
+	}{
+		{
+			name:   "plus",
+			kind:   PlusToken,
+			wantOk: true,
+		},
+		{
+			name:   "minus",
+			kind:   MinusToken,
+			wantOk: true,
+		},
+		{
+			name:   "asteriks",
+			kind:   AsteriskToken,
+			wantOk: true,
+		},
+		{
+			name:   "slash",
+			kind:   SlashToken,
+			wantOk: true,
+		},
+		{
+			name:   "percent",
+			kind:   PercentToken,
+			wantOk: true,
+		},
+		{
+			name:   "exponent",
+			kind:   ExponentiationToken,
+			wantOk: true,
+		},
+		{
+			name:   "not operator",
+			kind:   LeftParenthesisToken,
+			wantOk: false,
+		},
+	}
+	for _, testCase := range testsCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			ok := testCase.kind.IsOperator()
+
+			assert.Equal(test, testCase.wantOk, ok)
+		})
+	}
+}
+
 func TestKind_Precedence(test *testing.T) {
 	testsCases := []struct {
 		name           string
@@ -129,7 +180,7 @@ func TestKind_Precedence(test *testing.T) {
 			wantPrecedence: 3,
 		},
 		{
-			name:           "not operation",
+			name:           "not operator",
 			kind:           LeftParenthesisToken,
 			wantPrecedence: 0,
 		},

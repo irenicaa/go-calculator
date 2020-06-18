@@ -46,6 +46,18 @@ func ParseTokenKind(symbol rune) (TokenKind, error) {
 	}
 }
 
+// IsOperator ...
+func (kind TokenKind) IsOperator() bool {
+	switch kind {
+	case PlusToken, MinusToken,
+		AsteriskToken, SlashToken, PercentToken,
+		ExponentiationToken:
+		return true
+	default:
+		return false
+	}
+}
+
 // Precedence ...
 func (kind TokenKind) Precedence() int {
 	switch kind {
