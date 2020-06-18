@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestStack_Push(test *testing.T) {
+func TestTokenStack_Push(test *testing.T) {
 	type args struct {
 		token Token
 	}
@@ -46,7 +46,7 @@ func TestStack_Push(test *testing.T) {
 	}
 }
 
-func TestStack_Pop(test *testing.T) {
+func TestTokenStack_Pop(test *testing.T) {
 	testsCases := []struct {
 		name      string
 		stack     TokenStack

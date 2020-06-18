@@ -92,7 +92,7 @@ func TestParseTokenKind(test *testing.T) {
 	}
 }
 
-func TestKind_IsOperator(test *testing.T) {
+func TestTokenKind_IsOperator(test *testing.T) {
 	testsCases := []struct {
 		name   string
 		kind   TokenKind
@@ -109,7 +109,7 @@ func TestKind_IsOperator(test *testing.T) {
 			wantOk: true,
 		},
 		{
-			name:   "asteriks",
+			name:   "asterisk",
 			kind:   AsteriskToken,
 			wantOk: true,
 		},
@@ -124,7 +124,7 @@ func TestKind_IsOperator(test *testing.T) {
 			wantOk: true,
 		},
 		{
-			name:   "exponent",
+			name:   "exponentiation",
 			kind:   ExponentiationToken,
 			wantOk: true,
 		},
@@ -143,7 +143,7 @@ func TestKind_IsOperator(test *testing.T) {
 	}
 }
 
-func TestKind_Precedence(test *testing.T) {
+func TestTokenKind_Precedence(test *testing.T) {
 	testsCases := []struct {
 		name           string
 		kind           TokenKind
@@ -160,7 +160,7 @@ func TestKind_Precedence(test *testing.T) {
 			wantPrecedence: 1,
 		},
 		{
-			name:           "asteriks",
+			name:           "asterisk",
 			kind:           AsteriskToken,
 			wantPrecedence: 2,
 		},
@@ -175,7 +175,7 @@ func TestKind_Precedence(test *testing.T) {
 			wantPrecedence: 2,
 		},
 		{
-			name:           "exponent",
+			name:           "exponentiation",
 			kind:           ExponentiationToken,
 			wantPrecedence: 3,
 		},
