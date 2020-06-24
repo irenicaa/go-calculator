@@ -46,6 +46,11 @@ func ParseTokenKind(symbol rune) (TokenKind, error) {
 	}
 }
 
+// IsParenthesis ...
+func (kind TokenKind) IsParenthesis() bool {
+	return kind == LeftParenthesisToken || kind == RightParenthesisToken
+}
+
 // IsOperator ...
 func (kind TokenKind) IsOperator() bool {
 	switch kind {

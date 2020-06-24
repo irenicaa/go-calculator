@@ -143,6 +143,37 @@ func TestTokenKind_IsOperator(test *testing.T) {
 	}
 }
 
+func TestTokenKind_IsParenthesis(test *testing.T) {
+	testsCases := []struct {
+		name   string
+		kind   TokenKind
+		wantOk bool
+	}{
+		{
+			name:   "left parenthesis",
+			kind:   LeftParenthesisToken,
+			wantOk: true,
+		},
+		{
+			name:   "right parenthesis",
+			kind:   RightParenthesisToken,
+			wantOk: true,
+		},
+		{
+			name:   "not parenthesis",
+			kind:   NumberToken,
+			wantOk: false,
+		},
+	}
+	for _, testCase := range testsCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			ok := testCase.kind.IsParenthesis()
+
+			assert.Equal(test, testCase.wantOk, ok)
+		})
+	}
+}
+
 func TestTokenKind_Precedence(test *testing.T) {
 	testsCases := []struct {
 		name           string

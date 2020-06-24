@@ -86,7 +86,7 @@ func Translate(tokens []Token) ([]Command, error) {
 		if !ok {
 			break
 		}
-		if tokenOnStack.Kind == LeftParenthesisToken || tokenOnStack.Kind == RightParenthesisToken {
+		if tokenOnStack.Kind.IsParenthesis() {
 			return nil, fmt.Errorf("missed pair for token %+v", tokenOnStack)
 		}
 
