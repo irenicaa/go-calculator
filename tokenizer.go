@@ -29,11 +29,6 @@ type Tokenizer struct {
 	buffer string
 }
 
-// Tokens ...
-func (tokenizer Tokenizer) Tokens() []Token {
-	return tokenizer.tokens
-}
-
 // Tokenize ...
 func (tokenizer *Tokenizer) Tokenize(code string) error {
 	for symbolIndex, symbol := range code {
@@ -105,7 +100,17 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 		}
 	}
 
-	return tokenizer.resetBuffer(eoi)
+	return nil
+}
+
+// Finalize ...
+func (tokenizer *Tokenizer) Finalize() ([]Token, error) {
+	err := tokenizer.resetBuffer(eoi)
+	if err != nil {
+		return nil, err
+	}
+
+	return tokenizer.tokens, nil
 }
 
 func (tokenizer Tokenizer) areIntegerAndFractionalEmpty() bool {
