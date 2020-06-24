@@ -50,6 +50,29 @@ func Translate(tokens []Token) ([]Command, error) {
 			}
 
 			stack.Push(token)
+		case token.Kind == LeftParenthesisToken:
+			stack.Push(token)
+		case token.Kind == RightParenthesisToken:
+			for {
+				tokenOnStack, ok := stack.Pop()
+				if !ok {
+					return nil, fmt.Errorf(
+						"missed pair for token %+v with number #%d",
+						token,
+						tokenIndex,
+					)
+				}
+				if tokenOnStack.Kind == LeftParenthesisToken {
+					break
+				}
+				if !tokenOnStack.Kind.IsOperator() {
+					stack.Push(tokenOnStack)
+					break
+				}
+
+				command := Command{CallFunctionCommand, tokenOnStack.Value}
+				commands = append(commands, command)
+			}
 		default:
 			return nil, fmt.Errorf(
 				"unknown token %+v with number #%d",
@@ -62,6 +85,9 @@ func Translate(tokens []Token) ([]Command, error) {
 		tokenOnStack, ok := stack.Pop()
 		if !ok {
 			break
+		}
+		if tokenOnStack.Kind == LeftParenthesisToken || tokenOnStack.Kind == RightParenthesisToken {
+			return nil, fmt.Errorf("missed pair for token %+v", tokenOnStack)
 		}
 
 		command := Command{CallFunctionCommand, tokenOnStack.Value}
