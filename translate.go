@@ -37,9 +37,11 @@ func Translate(tokens []Token) ([]Command, error) {
 					break
 				}
 				if !tokenOnStack.Kind.IsOperator() {
+					stack.Push(tokenOnStack)
 					break
 				}
 				if tokenOnStack.Kind.Precedence() < token.Kind.Precedence() {
+					stack.Push(tokenOnStack)
 					break
 				}
 
