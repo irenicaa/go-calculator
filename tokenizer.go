@@ -42,25 +42,17 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 		case unicode.IsLetter(symbol), symbol == '_':
 			switch tokenizer.state {
 			case integerPartTokenizerState, fractionalPartTokenizerState:
-				if tokenizer.areIntegerAndFractionalEmpty() {
-					return fmt.Errorf(
-						"both integer and fractional parts are empty at position %d",
-						symbolIndex,
-					)
-				}
 				if symbol == 'e' || symbol == 'E' {
 					tokenizer.state = exponentTokenizerState
 					tokenizer.buffer += string(symbol)
 					continue
 				}
-
-				tokenizer.addTokenFromBuffer(NumberToken)
-			case exponentTokenizerState:
-				if tokenizer.isExponentEmpty() {
-					return fmt.Errorf("empty exponent part at position %d", symbolIndex)
+			}
+			if tokenizer.state != identifierTokenizerState {
+				err := tokenizer.resetBuffer(symbolPosition)
+				if err != nil {
+					return err
 				}
-
-				tokenizer.addTokenFromBuffer(NumberToken)
 			}
 
 			tokenizer.state = identifierTokenizerState
