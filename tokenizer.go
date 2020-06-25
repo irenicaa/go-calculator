@@ -86,9 +86,9 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 				continue
 			}
 
-			return fmt.Errorf("unexpected fractional point at position %d", symbolIndex)
+			return fmt.Errorf("unexpected fractional point at %s", symbolPosition)
 		default:
-			return fmt.Errorf("unknown symbol %q at position %d", symbol, symbolIndex)
+			return fmt.Errorf("unknown symbol %q at %s", symbol, symbolPosition)
 		}
 	}
 
