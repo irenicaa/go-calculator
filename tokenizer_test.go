@@ -43,6 +43,12 @@ func TestTokenizer(test *testing.T) {
 			wantErr:    "",
 		},
 		{
+			name:       "exponent with integers (in upper case)",
+			args:       args{code: "23E10"},
+			wantTokens: []Token{{Kind: NumberToken, Value: "23E10"}},
+			wantErr:    "",
+		},
+		{
 			name:       "exponent with fractionals",
 			args:       args{code: "23.42e10"},
 			wantTokens: []Token{{Kind: NumberToken, Value: "23.42e10"}},
@@ -52,6 +58,12 @@ func TestTokenizer(test *testing.T) {
 			name:       "exponent with plus",
 			args:       args{code: "23.42e+10"},
 			wantTokens: []Token{{Kind: NumberToken, Value: "23.42e+10"}},
+			wantErr:    "",
+		},
+		{
+			name:       "exponent with plus (in upper case)",
+			args:       args{code: "23.42E+10"},
+			wantTokens: []Token{{Kind: NumberToken, Value: "23.42E+10"}},
 			wantErr:    "",
 		},
 		{
