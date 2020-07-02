@@ -6,6 +6,12 @@ import (
 	"unicode"
 )
 
+// Token ...
+type Token struct {
+	Kind  TokenKind
+	Value string
+}
+
 type tokenizerState int
 
 const (
@@ -15,12 +21,6 @@ const (
 	exponentTokenizerState
 	identifierTokenizerState
 )
-
-// Token ...
-type Token struct {
-	Kind  TokenKind
-	Value string
-}
 
 // Tokenizer ...
 type Tokenizer struct {
