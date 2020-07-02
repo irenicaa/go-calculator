@@ -42,7 +42,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 		case unicode.IsLetter(symbol), symbol == '_':
 			switch tokenizer.state {
 			case integerPartTokenizerState, fractionalPartTokenizerState:
-				if symbol == 'e' || symbol == 'E' {
+				if unicode.ToLower(symbol) == 'e' {
 					tokenizer.state = exponentTokenizerState
 					tokenizer.buffer += string(symbol)
 					continue
@@ -111,7 +111,7 @@ func (tokenizer Tokenizer) areIntegerAndFractionalEmpty() bool {
 
 func (tokenizer Tokenizer) isExponentEmpty() bool {
 	lastSymbol := tokenizer.buffer[len(tokenizer.buffer)-1]
-	return lastSymbol == 'e' || lastSymbol == 'E'
+	return unicode.ToLower(rune(lastSymbol)) == 'e'
 }
 
 func (tokenizer *Tokenizer) addTokenFromBuffer(kind TokenKind) {
