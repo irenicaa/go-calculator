@@ -714,3 +714,49 @@ func TestTokenizer(test *testing.T) {
 		})
 	}
 }
+func TestTokenizer_withSequentialCalls(test *testing.T) {
+	type args struct {
+		codeParts []string
+	}
+
+	testsCases := []struct {
+		name       string
+		args       args
+		wantTokens []Token
+	}{
+		{
+			name: "different tokens in separate parts",
+			args: args{codeParts: []string{"23", "test"}},
+			wantTokens: []Token{
+				{Kind: NumberToken, Value: "23"},
+				{Kind: IdentifierToken, Value: "test"},
+			},
+		},
+		{
+			name: "single token in separate parts",
+			args: args{codeParts: []string{"test", "23"}},
+			wantTokens: []Token{
+				{Kind: IdentifierToken, Value: "test23"},
+			},
+		},
+	}
+	for _, testCase := range testsCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			gotTokens, gotErr := []Token(nil), error(nil)
+
+			tokenizer := Tokenizer{}
+			for _, codePart := range testCase.args.codeParts {
+				gotErr = tokenizer.Tokenize(codePart)
+				if gotErr != nil {
+					break
+				}
+			}
+			if gotErr == nil {
+				gotTokens, gotErr = tokenizer.Finalize()
+			}
+
+			assert.Equal(test, testCase.wantTokens, gotTokens)
+			assert.NoError(test, gotErr)
+		})
+	}
+}
