@@ -714,6 +714,7 @@ func TestTokenizer(test *testing.T) {
 		})
 	}
 }
+
 func TestTokenizer_withSequentialCalls(test *testing.T) {
 	type args struct {
 		codeParts []string
@@ -733,11 +734,9 @@ func TestTokenizer_withSequentialCalls(test *testing.T) {
 			},
 		},
 		{
-			name: "single token in separate parts",
-			args: args{codeParts: []string{"test", "23"}},
-			wantTokens: []Token{
-				{Kind: IdentifierToken, Value: "test23"},
-			},
+			name:       "single token in separate parts",
+			args:       args{codeParts: []string{"test", "23"}},
+			wantTokens: []Token{{Kind: IdentifierToken, Value: "test23"}},
 		},
 	}
 	for _, testCase := range testsCases {
