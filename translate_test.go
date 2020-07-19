@@ -26,7 +26,11 @@ func TestTranslate(test *testing.T) {
 			)
 
 			assert.Equal(test, testCase.wantCommands, gotCommands)
-			assert.NoError(test, gotErr)
+			if testCase.wantErr == "" {
+				assert.NoError(test, gotErr)
+			} else {
+				assert.EqualError(test, gotErr, testCase.wantErr)
+			}
 		})
 	}
 }
