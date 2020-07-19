@@ -122,6 +122,7 @@ func (tokenizer *Tokenizer) addTokenFromBuffer(kind TokenKind) {
 }
 
 func (tokenizer *Tokenizer) addTokenFromSymbol(symbol rune) {
+	// lack of the error is guaranteed by the calling function
 	kind, _ := ParseTokenKind(symbol)
 	token := Token{kind, string(symbol)}
 	tokenizer.tokens = append(tokenizer.tokens, token)
