@@ -20,7 +20,7 @@ const (
 	CommaToken
 )
 
-// lack of the error is guaranteed by the calling function
+// ParseTokenKind ...
 func ParseTokenKind(symbol rune) (TokenKind, error) {
 	switch symbol {
 	case '+':
