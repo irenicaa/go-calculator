@@ -151,15 +151,114 @@ func TestTranslate(test *testing.T) {
 			},
 			wantErr: "",
 		},
+		{
+			name: "function call without arguments",
+			args: args{
+				tokens: []Token{
+					{Kind: IdentifierToken, Value: "test"},
+					{Kind: LeftParenthesisToken, Value: "("},
+					{Kind: RightParenthesisToken, Value: ")"},
+				},
+				functions: map[string]struct{}{"test": {}},
+			},
+			wantCommands: []Command{{Kind: CallFunctionCommand, Operand: "test"}},
+			wantErr:      "",
+		},
+		{
+			name: "function call with one simple argument",
+			args: args{
+				tokens: []Token{
+					{Kind: IdentifierToken, Value: "test"},
+					{Kind: LeftParenthesisToken, Value: "("},
+					{Kind: NumberToken, Value: "23"},
+					{Kind: RightParenthesisToken, Value: ")"},
+				},
+				functions: map[string]struct{}{"test": {}},
+			},
+			wantCommands: []Command{
+				{Kind: PushNumberCommand, Operand: "23"},
+				{Kind: CallFunctionCommand, Operand: "test"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "function call with one complex argument",
+			args: args{
+				tokens: []Token{
+					{Kind: IdentifierToken, Value: "test"},
+					{Kind: LeftParenthesisToken, Value: "("},
+					{Kind: NumberToken, Value: "23"},
+					{Kind: PlusToken, Value: "+"},
+					{Kind: NumberToken, Value: "42"},
+					{Kind: RightParenthesisToken, Value: ")"},
+				},
+				functions: map[string]struct{}{"test": {}},
+			},
+			wantCommands: []Command{
+				{Kind: PushNumberCommand, Operand: "23"},
+				{Kind: PushNumberCommand, Operand: "42"},
+				{Kind: CallFunctionCommand, Operand: "+"},
+				{Kind: CallFunctionCommand, Operand: "test"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "function call with few simple arguments",
+			args: args{
+				tokens: []Token{
+					{Kind: IdentifierToken, Value: "test"},
+					{Kind: LeftParenthesisToken, Value: "("},
+					{Kind: NumberToken, Value: "23"},
+					{Kind: CommaToken, Value: ","},
+					{Kind: NumberToken, Value: "42"},
+					{Kind: RightParenthesisToken, Value: ")"},
+				},
+				functions: map[string]struct{}{"test": {}},
+			},
+			wantCommands: []Command{
+				{Kind: PushNumberCommand, Operand: "23"},
+				{Kind: PushNumberCommand, Operand: "42"},
+				{Kind: CallFunctionCommand, Operand: "test"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "function call with few complex arguments",
+			args: args{
+				tokens: []Token{
+					{Kind: IdentifierToken, Value: "test"},
+					{Kind: LeftParenthesisToken, Value: "("},
+					{Kind: NumberToken, Value: "5"},
+					{Kind: PlusToken, Value: "+"},
+					{Kind: NumberToken, Value: "12"},
+					{Kind: CommaToken, Value: ","},
+					{Kind: NumberToken, Value: "23"},
+					{Kind: MinusToken, Value: "-"},
+					{Kind: NumberToken, Value: "42"},
+					{Kind: RightParenthesisToken, Value: ")"},
+				},
+				functions: map[string]struct{}{"test": {}},
+			},
+			wantCommands: []Command{
+				{Kind: PushNumberCommand, Operand: "5"},
+				{Kind: PushNumberCommand, Operand: "12"},
+				{Kind: CallFunctionCommand, Operand: "+"},
+				{Kind: PushNumberCommand, Operand: "23"},
+				{Kind: PushNumberCommand, Operand: "42"},
+				{Kind: CallFunctionCommand, Operand: "-"},
+				{Kind: CallFunctionCommand, Operand: "test"},
+			},
+			wantErr: "",
+		},
 
-		// error
+		// errors
 		{
 			name: "missed left parenthesis",
 			args: args{
 				tokens: []Token{
 					{Kind: NumberToken, Value: "12"},
 					{Kind: PlusToken, Value: "+"},
-					{Kind: NumberToken, Value: "12"},
+					{Kind: NumberToken, Value: "23"},
 					{Kind: RightParenthesisToken, Value: ")"},
 					{Kind: AsteriskToken, Value: "*"},
 					{Kind: NumberToken, Value: "42"},
@@ -179,7 +278,7 @@ func TestTranslate(test *testing.T) {
 					{Kind: NumberToken, Value: "42"},
 					{Kind: RightParenthesisToken, Value: ")"},
 				},
-				functions: nil,
+				functions: map[string]struct{}{"test": {}},
 			},
 			wantCommands: nil,
 			wantErr:      "missed pair for token {Kind:9 Value:)} with number #4",
