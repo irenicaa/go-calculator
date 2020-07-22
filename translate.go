@@ -71,10 +71,6 @@ func Translate(tokens []Token, functions map[string]struct{}) ([]Command, error)
 				if tokenOnStack.Kind == LeftParenthesisToken {
 					break
 				}
-				if !tokenOnStack.Kind.IsOperator() && tokenOnStack.Kind != IdentifierToken {
-					stack.Push(tokenOnStack)
-					break
-				}
 
 				command := Command{CallFunctionCommand, tokenOnStack.Value}
 				commands = append(commands, command)
@@ -101,12 +97,6 @@ func Translate(tokens []Token, functions map[string]struct{}) ([]Command, error)
 				command := Command{CallFunctionCommand, tokenOnStack.Value}
 				commands = append(commands, command)
 			}
-		default:
-			return nil, fmt.Errorf(
-				"unknown token %+v with number #%d",
-				token,
-				tokenIndex,
-			)
 		}
 	}
 	for {
