@@ -18,51 +18,58 @@ type Command struct {
 	Operand string
 }
 
+// Translator ...
+type Translator struct {
+	commands []Command
+	stack    TokenStack
+}
+
 // Translate ...
-func Translate(tokens []Token, functions map[string]struct{}) ([]Command, error) {
-	commands := []Command{}
-	stack := TokenStack{}
+func (translator *Translator) Translate(
+	tokens []Token,
+	functions map[string]struct{},
+) error {
 	for tokenIndex, token := range tokens {
 		switch {
 		case token.Kind == NumberToken:
 			command := Command{PushNumberCommand, token.Value}
-			commands = append(commands, command)
+			translator.commands = append(translator.commands, command)
 		case token.Kind == IdentifierToken:
 			_, ok := functions[token.Value]
 			if ok {
-				stack.Push(token)
+				translator.stack.Push(token)
 				continue
 			}
 
 			command := Command{PushVariableCommand, token.Value}
-			commands = append(commands, command)
+			translator.commands = append(translator.commands, command)
 		case token.Kind.IsOperator():
 			for {
-				tokenOnStack, ok := stack.Pop()
+				tokenOnStack, ok := translator.stack.Pop()
 				if !ok {
 					break
 				}
 				if !tokenOnStack.Kind.IsOperator() {
-					stack.Push(tokenOnStack)
+					translator.stack.Push(tokenOnStack)
 					break
 				}
 				if tokenOnStack.Kind.Precedence() < token.Kind.Precedence() {
-					stack.Push(tokenOnStack)
+					translator.stack.Push(tokenOnStack)
 					break
 				}
 
 				command := Command{CallFunctionCommand, tokenOnStack.Value}
-				commands = append(commands, command)
+				translator.commands = append(translator.commands, command)
 			}
 
-			stack.Push(token)
+			translator.stack.Push(token)
 		case token.Kind == LeftParenthesisToken:
-			stack.Push(token)
+			translator.stack.Push(token)
 		case token.Kind == RightParenthesisToken:
 			for {
-				tokenOnStack, ok := stack.Pop()
+				tokenOnStack, ok := translator.stack.Pop()
 				if !ok {
-					return nil, fmt.Errorf(
+					return fmt.Errorf(
 						"missed pair for token %+v with number #%d",
 						token,
 						tokenIndex,
@@ -73,34 +80,40 @@ func Translate(tokens []Token, functions map[string]struct{}) ([]Command, error)
 				}
 
 				command := Command{CallFunctionCommand, tokenOnStack.Value}
-				commands = append(commands, command)
+				translator.commands = append(translator.commands, command)
 			}
 		case token.Kind == CommaToken:
 			for {
-				tokenOnStack, ok := stack.Pop()
+				tokenOnStack, ok := translator.stack.Pop()
 				if !ok {
-					return nil, fmt.Errorf(
+					return fmt.Errorf(
 						"missed pair for token %+v with number #%d",
 						token,
 						tokenIndex,
 					)
 				}
 				if tokenOnStack.Kind == LeftParenthesisToken {
-					stack.Push(tokenOnStack)
+					translator.stack.Push(tokenOnStack)
 					break
 				}
 				if !tokenOnStack.Kind.IsOperator() {
-					stack.Push(tokenOnStack)
+					translator.stack.Push(tokenOnStack)
 					break
 				}
 
 				command := Command{CallFunctionCommand, tokenOnStack.Value}
-				commands = append(commands, command)
+				translator.commands = append(translator.commands, command)
 			}
 		}
 	}
+
+	return nil
+}
+
+// Finalize ...
+func (translator *Translator) Finalize() ([]Command, error) {
 	for {
-		tokenOnStack, ok := stack.Pop()
+		tokenOnStack, ok := translator.stack.Pop()
 		if !ok {
 			break
 		}
@@ -109,8 +122,8 @@ func Translate(tokens []Token, functions map[string]struct{}) ([]Command, error)
 		}
 
 		command := Command{CallFunctionCommand, tokenOnStack.Value}
-		commands = append(commands, command)
+		translator.commands = append(translator.commands, command)
 	}
 
-	return commands, nil
+	return translator.commands, nil
 }

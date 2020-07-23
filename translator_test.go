@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTranslate(test *testing.T) {
+func TestTranslator(test *testing.T) {
 	type args struct {
 		tokens    []Token
 		functions map[string]struct{}
@@ -316,10 +316,16 @@ func TestTranslate(test *testing.T) {
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			gotCommands, gotErr := Translate(
+			gotCommands := []Command(nil)
+
+			translator := Translator{}
+			gotErr := translator.Translate(
 				testCase.args.tokens,
 				testCase.args.functions,
 			)
+			if gotErr == nil {
+				gotCommands, gotErr = translator.Finalize()
+			}
 
 			assert.Equal(test, testCase.wantCommands, gotCommands)
 			if testCase.wantErr == "" {
