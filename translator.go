@@ -32,8 +32,7 @@ func (translator *Translator) Translate(
 	for tokenIndex, token := range tokens {
 		switch {
 		case token.Kind == NumberToken:
-			command := Command{PushNumberCommand, token.Value}
-			translator.commands = append(translator.commands, command)
+			translator.addCommand(PushNumberCommand, token)
 		case token.Kind == IdentifierToken:
 			_, ok := functions[token.Value]
 			if ok {
@@ -41,8 +40,7 @@ func (translator *Translator) Translate(
 				continue
 			}
 
-			command := Command{PushVariableCommand, token.Value}
-			translator.commands = append(translator.commands, command)
+			translator.addCommand(PushVariableCommand, token)
 		case token.Kind.IsOperator():
 			for {
 				tokenOnStack, ok := translator.stack.Pop()
@@ -58,8 +56,7 @@ func (translator *Translator) Translate(
 					break
 				}
 
-				command := Command{CallFunctionCommand, tokenOnStack.Value}
-				translator.commands = append(translator.commands, command)
+				translator.addCommand(CallFunctionCommand, tokenOnStack)
 			}
 
 			translator.stack.Push(token)
@@ -79,8 +76,7 @@ func (translator *Translator) Translate(
 					break
 				}
 
-				command := Command{CallFunctionCommand, tokenOnStack.Value}
-				translator.commands = append(translator.commands, command)
+				translator.addCommand(CallFunctionCommand, tokenOnStack)
 			}
 		case token.Kind == CommaToken:
 			for {
@@ -101,13 +97,17 @@ func (translator *Translator) Translate(
 					break
 				}
 
-				command := Command{CallFunctionCommand, tokenOnStack.Value}
-				translator.commands = append(translator.commands, command)
+				translator.addCommand(CallFunctionCommand, tokenOnStack)
 			}
 		}
 	}
 
 	return nil
+}
+
+func (translator *Translator) addCommand(commandKind CommandKind, token Token) {
+	command := Command{commandKind, token.Value}
+	translator.commands = append(translator.commands, command)
 }
 
 // Finalize ...
@@ -121,8 +121,7 @@ func (translator *Translator) Finalize() ([]Command, error) {
 			return nil, fmt.Errorf("missed pair for token %+v", tokenOnStack)
 		}
 
-		command := Command{CallFunctionCommand, tokenOnStack.Value}
-		translator.commands = append(translator.commands, command)
+		translator.addCommand(CallFunctionCommand, tokenOnStack)
 	}
 
 	return translator.commands, nil
