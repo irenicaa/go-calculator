@@ -319,10 +319,7 @@ func TestTranslator(test *testing.T) {
 			gotCommands := []Command(nil)
 
 			translator := Translator{}
-			gotErr := translator.Translate(
-				testCase.args.tokens,
-				testCase.args.functions,
-			)
+			gotErr := translator.Translate(testCase.args.tokens, testCase.args.functions)
 			if gotErr == nil {
 				gotCommands, gotErr = translator.Finalize()
 			}
