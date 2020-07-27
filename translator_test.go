@@ -333,3 +333,84 @@ func TestTranslator(test *testing.T) {
 		})
 	}
 }
+
+func TestTranslator_withSequentialCalls(test *testing.T) {
+	type args struct {
+		tokenGroups [][]Token
+		functions   map[string]struct{}
+	}
+
+	testsCases := []struct {
+		name         string
+		args         args
+		wantCommands []Command
+		wantErr      string
+	}{
+		{
+			name: "few operators with different precedences (ascending)",
+			args: args{
+				tokenGroups: [][]Token{
+					{
+						{Kind: LeftParenthesisToken, Value: "("},
+						{Kind: NumberToken, Value: "12"},
+						{Kind: PlusToken, Value: "+"},
+						{Kind: NumberToken, Value: "23"},
+					},
+					{
+						{Kind: RightParenthesisToken, Value: ")"},
+						{Kind: AsteriskToken, Value: "*"},
+						{Kind: NumberToken, Value: "42"},
+					},
+				},
+				functions: nil,
+			},
+			wantCommands: []Command{
+				{Kind: PushNumberCommand, Operand: "12"},
+				{Kind: PushNumberCommand, Operand: "23"},
+				{Kind: CallFunctionCommand, Operand: "+"},
+				{Kind: PushNumberCommand, Operand: "42"},
+				{Kind: CallFunctionCommand, Operand: "*"},
+			},
+			wantErr: "",
+		},
+		{
+			name: "function call with one simple argument",
+			args: args{
+				tokenGroups: [][]Token{
+					{
+						{Kind: IdentifierToken, Value: "test"},
+					},
+					{
+						{Kind: LeftParenthesisToken, Value: "()"},
+						{Kind: NumberToken, Value: "23"},
+						{Kind: RightParenthesisToken, Value: ")"},
+					},
+				},
+				functions: nil,
+			},
+			wantCommands: []Command{
+				{Kind: PushVariableCommand, Operand: "test"},
+				{Kind: PushNumberCommand, Operand: "23"},
+			},
+			wantErr: "",
+		},
+	}
+	for _, testCase := range testsCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			gotCommand, gotErr := []Command(nil), error(nil)
+			translator := Translator{}
+			for _, token := range testCase.args.tokenGroups {
+				gotErr = translator.Translate(token, testCase.args.functions)
+				if gotErr != nil {
+					break
+				}
+			}
+			if gotErr == nil {
+				gotCommand, gotErr = translator.Finalize()
+			}
+
+			assert.Equal(test, testCase.wantCommands, gotCommand)
+			assert.NoError(test, gotErr)
+		})
+	}
+}
