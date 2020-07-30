@@ -105,8 +105,8 @@ func (translator *Translator) Translate(
 	return nil
 }
 
-func (translator *Translator) addCommand(commandKind CommandKind, token Token) {
-	command := Command{commandKind, token.Value}
+func (translator *Translator) addCommand(kind CommandKind, token Token) {
+	command := Command{kind, token.Value}
 	translator.commands = append(translator.commands, command)
 }
 
