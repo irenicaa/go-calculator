@@ -347,7 +347,7 @@ func TestTranslator_withSequentialCalls(test *testing.T) {
 		wantErr      string
 	}{
 		{
-			name: "few operators with different precedences (ascending)",
+			name: "few operators with one pair of parentheses",
 			args: args{
 				tokenGroups: [][]Token{
 					{
@@ -397,19 +397,20 @@ func TestTranslator_withSequentialCalls(test *testing.T) {
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			gotCommand, gotErr := []Command(nil), error(nil)
+			gotCommands, gotErr := []Command(nil), error(nil)
+
 			translator := Translator{}
-			for _, token := range testCase.args.tokenGroups {
-				gotErr = translator.Translate(token, testCase.args.functions)
+			for _, tokenGroup := range testCase.args.tokenGroups {
+				gotErr = translator.Translate(tokenGroup, testCase.args.functions)
 				if gotErr != nil {
 					break
 				}
 			}
 			if gotErr == nil {
-				gotCommand, gotErr = translator.Finalize()
+				gotCommands, gotErr = translator.Finalize()
 			}
 
-			assert.Equal(test, testCase.wantCommands, gotCommand)
+			assert.Equal(test, testCase.wantCommands, gotCommands)
 			assert.NoError(test, gotErr)
 		})
 	}
