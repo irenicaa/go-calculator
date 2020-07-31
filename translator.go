@@ -105,11 +105,6 @@ func (translator *Translator) Translate(
 	return nil
 }
 
-func (translator *Translator) addCommand(kind CommandKind, token Token) {
-	command := Command{kind, token.Value}
-	translator.commands = append(translator.commands, command)
-}
-
 // Finalize ...
 func (translator *Translator) Finalize() ([]Command, error) {
 	for {
@@ -125,4 +120,9 @@ func (translator *Translator) Finalize() ([]Command, error) {
 	}
 
 	return translator.commands, nil
+}
+
+func (translator *Translator) addCommand(kind CommandKind, token Token) {
+	command := Command{kind, token.Value}
+	translator.commands = append(translator.commands, command)
 }
