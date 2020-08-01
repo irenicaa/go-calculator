@@ -69,8 +69,7 @@ func (translator *Translator) Translate(
 		case token.Kind == LeftParenthesisToken:
 			translator.stack.Push(token)
 		case token.Kind == RightParenthesisToken:
-			for {
-				tokenOnStack, ok := translator.stack.Pop()
+			err := translator.unwindStack(func(tokenOnStack Token, ok bool) error {
 				if !ok {
 					return fmt.Errorf(
 						"missed pair for token %+v with number #%d",
@@ -79,12 +78,14 @@ func (translator *Translator) Translate(
 					)
 				}
 				if tokenOnStack.Kind == LeftParenthesisToken {
-					break
+					return errStop
 				}
 
-				translator.addCommand(CallFunctionCommand, tokenOnStack)
+				return nil
+			})
+			if err != nil {
+				return err
 			}
-
 		case token.Kind == CommaToken:
 			err := translator.unwindStack(func(tokenOnStack Token, ok bool) error {
 				if !ok {
