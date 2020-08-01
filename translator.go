@@ -113,16 +113,18 @@ func (translator *Translator) Translate(
 
 // Finalize ...
 func (translator *Translator) Finalize() ([]Command, error) {
-	for {
-		tokenOnStack, ok := translator.stack.Pop()
+	err := translator.unwindStack(func(tokenOnStack Token, ok bool) error {
 		if !ok {
-			break
+			return errStop
 		}
 		if tokenOnStack.Kind.IsParenthesis() {
-			return nil, fmt.Errorf("missed pair for token %+v", tokenOnStack)
+			return fmt.Errorf("missed pair for token %+v", tokenOnStack)
 		}
 
-		translator.addCommand(CallFunctionCommand, tokenOnStack)
+		return nil
+	})
+	if err != nil {
+		return nil, err
 	}
 
 	return translator.commands, nil
