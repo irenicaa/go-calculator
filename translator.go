@@ -48,22 +48,20 @@ func (translator *Translator) Translate(
 
 			translator.addCommand(PushVariableCommand, token)
 		case token.Kind.IsOperator():
-			for {
-				tokenOnStack, ok := translator.stack.Pop()
+			// in this case, all errors will be processed inside the method
+			translator.unwindStack(func(tokenOnStack Token, ok bool) error {
 				if !ok {
-					break
+					return errStop
 				}
 				if !tokenOnStack.Kind.IsOperator() {
-					translator.stack.Push(tokenOnStack)
-					break
+					return errStopAndRestore
 				}
 				if tokenOnStack.Kind.Precedence() < token.Kind.Precedence() {
-					translator.stack.Push(tokenOnStack)
-					break
+					return errStopAndRestore
 				}
 
-				translator.addCommand(CallFunctionCommand, tokenOnStack)
-			}
+				return nil
+			})
 
 			translator.stack.Push(token)
 		case token.Kind == LeftParenthesisToken:
