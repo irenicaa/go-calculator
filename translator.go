@@ -1,6 +1,12 @@
 package calculator
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
+
+var errStop = errors.New("stop")
+var errStopAndRestore = errors.New("stop and restore")
 
 // CommandKind ...
 type CommandKind int
@@ -125,4 +131,27 @@ func (translator *Translator) Finalize() ([]Command, error) {
 func (translator *Translator) addCommand(kind CommandKind, token Token) {
 	command := Command{kind, token.Value}
 	translator.commands = append(translator.commands, command)
+}
+
+func (translator *Translator) unwindStack(
+	checker func(tokenOnStack Token, ok bool) error,
+) error {
+	for {
+		tokenOnStack, ok := translator.stack.Pop()
+
+		err := checker(tokenOnStack, ok)
+		switch err {
+		case nil:
+		case errStopAndRestore:
+			translator.stack.Push(tokenOnStack)
+
+			fallthrough
+		case errStop:
+			return nil
+		default:
+			return err
+		}
+
+		translator.addCommand(CallFunctionCommand, tokenOnStack)
+	}
 }
