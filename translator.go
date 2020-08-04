@@ -8,7 +8,7 @@ import (
 var errStop = errors.New("stop")
 var errStopAndRestore = errors.New("stop and restore")
 
-type checker func(tokenOnStack Token, ok bool) error
+type stackChecker func(tokenOnStack Token, ok bool) error
 
 // CommandKind ...
 type CommandKind int
@@ -137,7 +137,7 @@ func (translator *Translator) addCommand(kind CommandKind, token Token) {
 	translator.commands = append(translator.commands, command)
 }
 
-func (translator *Translator) unwindStack(checker checker) error {
+func (translator *Translator) unwindStack(checker stackChecker) error {
 	for {
 		tokenOnStack, ok := translator.stack.Pop()
 
