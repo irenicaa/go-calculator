@@ -55,7 +55,7 @@ func Evaluate(
 			}
 
 			arguments := []float64{}
-			for argumentIndex := 0; argumentIndex <= function.Arity; argumentIndex++ {
+			for argumentIndex := 0; argumentIndex < function.Arity; argumentIndex++ {
 				number, ok := stack.Pop()
 				if !ok {
 					return 0, fmt.Errorf(
@@ -69,7 +69,7 @@ func Evaluate(
 				arguments = append(arguments, number)
 			}
 
-			for i := 0; i <= len(arguments)/2; i++ {
+			for i := 0; i < function.Arity/2; i++ {
 				arguments[function.Arity-i-1], arguments[i] =
 					arguments[i], arguments[function.Arity-i-1]
 			}
