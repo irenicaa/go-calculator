@@ -6,6 +6,12 @@ import (
 	"strconv"
 )
 
+// Function ...
+type Function struct {
+	Arity   int
+	Handler func(arguments []float64) float64
+}
+
 // Evaluate ...
 func Evaluate(commands []Command, variables map[string]float64) (float64, error) {
 	stack := NumberStack{}
