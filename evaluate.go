@@ -7,7 +7,7 @@ import (
 )
 
 // Evaluate ...
-func Evaluate(commands []Command) (float64, error) {
+func Evaluate(commands []Command, variables map[string]float64) (float64, error) {
 	stack := NumberStack{}
 	for commandIndex, command := range commands {
 		switch command.Kind {
@@ -24,6 +24,16 @@ func Evaluate(commands []Command) (float64, error) {
 
 			stack.Push(number)
 		case PushVariableCommand:
+			number, ok := variables[command.Operand]
+			if !ok {
+				return 0, fmt.Errorf(
+					"unknown variable in command %+v with number #%d",
+					command,
+					commandIndex,
+				)
+			}
+
+			stack.Push(number)
 		case CallFunctionCommand:
 		}
 	}
