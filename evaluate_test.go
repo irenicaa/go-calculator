@@ -20,7 +20,7 @@ func TestEvaluate(test *testing.T) {
 		wantErr    string
 	}{
 		{
-			name:       "empty",
+			name:       "without commands",
 			args:       args{commands: []Command{}, variables: nil, functions: nil},
 			wantNumber: 0,
 			wantErr:    "number stack is empty",
@@ -90,7 +90,7 @@ func TestEvaluate(test *testing.T) {
 			wantErr:    "",
 		},
 		{
-			name: "with the push call function command (error)",
+			name: "with the push call function command (error with an unknown function)",
 			args: args{
 				commands: []Command{
 					{Kind: PushNumberCommand, Operand: "2"},
@@ -112,7 +112,7 @@ func TestEvaluate(test *testing.T) {
 				"with number #2",
 		},
 		{
-			name: "with the push call function command (error)",
+			name: "with the push call function command (error with lack of arguments)",
 			args: args{
 				commands: []Command{
 					{Kind: PushNumberCommand, Operand: "2"},
