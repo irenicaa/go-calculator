@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestEvaluate(test *testing.T) {
+func TestEvaluator(test *testing.T) {
 	type args struct {
 		commands  []Command
 		variables map[string]float64
@@ -135,11 +135,17 @@ func TestEvaluate(test *testing.T) {
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			gotNumber, gotErr := Evaluate(
+			gotNumber := 0.0
+
+			evaluator := Evaluator{}
+			gotErr := evaluator.Evaluate(
 				testCase.args.commands,
 				testCase.args.variables,
 				testCase.args.functions,
 			)
+			if gotErr == nil {
+				gotNumber, gotErr = evaluator.Finalize()
+			}
 
 			assert.Equal(test, testCase.wantNumber, gotNumber)
 			if testCase.wantErr == "" {

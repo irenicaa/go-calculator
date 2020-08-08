@@ -12,19 +12,23 @@ type Function struct {
 	Handler func(arguments []float64) float64
 }
 
+// Evaluator ...
+type Evaluator struct {
+	stack NumberStack
+}
+
 // Evaluate ...
-func Evaluate(
+func (evaluator *Evaluator) Evaluate(
 	commands []Command,
 	variables map[string]float64,
 	functions map[string]Function,
-) (float64, error) {
-	stack := NumberStack{}
+) error {
 	for commandIndex, command := range commands {
 		switch command.Kind {
 		case PushNumberCommand:
 			number, err := strconv.ParseFloat(command.Operand, 64)
 			if err != nil {
-				return 0, fmt.Errorf(
+				return fmt.Errorf(
 					"incorrect number for command %+v with number #%d: %s",
 					command,
 					commandIndex,
@@ -32,22 +36,22 @@ func Evaluate(
 				)
 			}
 
-			stack.Push(number)
+			evaluator.stack.Push(number)
 		case PushVariableCommand:
 			number, ok := variables[command.Operand]
 			if !ok {
-				return 0, fmt.Errorf(
+				return fmt.Errorf(
 					"unknown variable in command %+v with number #%d",
 					command,
 					commandIndex,
 				)
 			}
 
-			stack.Push(number)
+			evaluator.stack.Push(number)
 		case CallFunctionCommand:
 			function, ok := functions[command.Operand]
 			if !ok {
-				return 0, fmt.Errorf(
+				return fmt.Errorf(
 					"unknown function in command %+v with number #%d",
 					command,
 					commandIndex,
@@ -56,9 +60,9 @@ func Evaluate(
 
 			arguments := []float64{}
 			for argumentIndex := 0; argumentIndex < function.Arity; argumentIndex++ {
-				number, ok := stack.Pop()
+				number, ok := evaluator.stack.Pop()
 				if !ok {
-					return 0, fmt.Errorf(
+					return fmt.Errorf(
 						"number stack is empty for argument #%d in command %+v with number #%d",
 						argumentIndex,
 						command,
@@ -75,11 +79,16 @@ func Evaluate(
 			}
 
 			number := function.Handler(arguments)
-			stack.Push(number)
+			evaluator.stack.Push(number)
 		}
 	}
 
-	number, ok := stack.Pop()
+	return nil
+}
+
+// Finalize ...
+func (evaluator *Evaluator) Finalize() (float64, error) {
+	number, ok := evaluator.stack.Pop()
 	if !ok {
 		return 0, errors.New("number stack is empty")
 	}
