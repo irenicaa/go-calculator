@@ -69,7 +69,7 @@ func TestEvaluator(test *testing.T) {
 				"with number #0",
 		},
 		{
-			name: "with the push call function command (success)",
+			name: "with the call function command (success)",
 			args: args{
 				commands: []Command{
 					{Kind: PushNumberCommand, Operand: "2"},
@@ -90,7 +90,7 @@ func TestEvaluator(test *testing.T) {
 			wantErr:    "",
 		},
 		{
-			name: "with the push call function command (error with an unknown function)",
+			name: "with the call function command (error with an unknown function)",
 			args: args{
 				commands: []Command{
 					{Kind: PushNumberCommand, Operand: "2"},
@@ -112,7 +112,7 @@ func TestEvaluator(test *testing.T) {
 				"with number #2",
 		},
 		{
-			name: "with the push call function command (error with lack of arguments)",
+			name: "with the call function command (error with lack of arguments)",
 			args: args{
 				commands: []Command{
 					{Kind: PushNumberCommand, Operand: "2"},
@@ -153,6 +153,64 @@ func TestEvaluator(test *testing.T) {
 			} else {
 				assert.EqualError(test, gotErr, testCase.wantErr)
 			}
+		})
+	}
+}
+
+func TestEvaluator_withSequentialCalls(test *testing.T) {
+	type args struct {
+		commandGroups [][]Command
+		variables     map[string]float64
+		functions     map[string]Function
+	}
+
+	testsCases := []struct {
+		name       string
+		args       args
+		wantNumber float64
+	}{
+		{
+			name: "with the call function command",
+			args: args{
+				commandGroups: [][]Command{
+					{
+						{Kind: PushNumberCommand, Operand: "2"},
+						{Kind: PushNumberCommand, Operand: "3"},
+					},
+					{
+						{Kind: CallFunctionCommand, Operand: "sub"},
+					},
+				},
+				variables: nil,
+				functions: map[string]Function{
+					"sub": {
+						Arity: 2,
+						Handler: func(arguments []float64) float64 {
+							return arguments[0] - arguments[1]
+						},
+					},
+				},
+			},
+			wantNumber: -1,
+		},
+	}
+	for _, testCase := range testsCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			gotNumber, gotErr := 0.0, error(nil)
+
+			evaluator := Evaluator{}
+			for _, commandGroup := range testCase.args.commandGroups {
+				gotErr = evaluator.Evaluate(commandGroup, testCase.args.variables, testCase.args.functions)
+				if gotErr != nil {
+					break
+				}
+			}
+			if gotErr == nil {
+				gotNumber, gotErr = evaluator.Finalize()
+			}
+
+			assert.Equal(test, testCase.wantNumber, gotNumber)
+			assert.NoError(test, gotErr)
 		})
 	}
 }

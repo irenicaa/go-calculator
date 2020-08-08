@@ -344,7 +344,6 @@ func TestTranslator_withSequentialCalls(test *testing.T) {
 		name         string
 		args         args
 		wantCommands []Command
-		wantErr      string
 	}{
 		{
 			name: "few operators with one pair of parentheses",
@@ -371,7 +370,6 @@ func TestTranslator_withSequentialCalls(test *testing.T) {
 				{Kind: PushNumberCommand, Operand: "42"},
 				{Kind: CallFunctionCommand, Operand: "*"},
 			},
-			wantErr: "",
 		},
 		{
 			name: "function call with one simple argument",
@@ -392,7 +390,6 @@ func TestTranslator_withSequentialCalls(test *testing.T) {
 				{Kind: PushNumberCommand, Operand: "23"},
 				{Kind: CallFunctionCommand, Operand: "test"},
 			},
-			wantErr: "",
 		},
 	}
 	for _, testCase := range testsCases {
