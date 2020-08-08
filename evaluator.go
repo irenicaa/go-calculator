@@ -87,7 +87,7 @@ func (evaluator *Evaluator) Evaluate(
 }
 
 // Finalize ...
-func (evaluator *Evaluator) Finalize() (float64, error) {
+func (evaluator Evaluator) Finalize() (float64, error) {
 	number, ok := evaluator.stack.Pop()
 	if !ok {
 		return 0, errors.New("number stack is empty")

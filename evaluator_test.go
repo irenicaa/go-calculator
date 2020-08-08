@@ -200,7 +200,11 @@ func TestEvaluator_withSequentialCalls(test *testing.T) {
 
 			evaluator := Evaluator{}
 			for _, commandGroup := range testCase.args.commandGroups {
-				gotErr = evaluator.Evaluate(commandGroup, testCase.args.variables, testCase.args.functions)
+				gotErr = evaluator.Evaluate(
+					commandGroup,
+					testCase.args.variables,
+					testCase.args.functions,
+				)
 				if gotErr != nil {
 					break
 				}
