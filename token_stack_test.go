@@ -3,12 +3,13 @@ package calculator
 import (
 	"testing"
 
+	"github.com/irenicaa/go-calculator/models"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTokenStack_Push(test *testing.T) {
 	type args struct {
-		token Token
+		token models.Token
 	}
 
 	testsCases := []struct {
@@ -19,22 +20,22 @@ func TestTokenStack_Push(test *testing.T) {
 	}{
 		{
 			name: "nonempty",
-			stack: []Token{
-				{Kind: NumberToken, Value: "1"},
-				{Kind: NumberToken, Value: "2"},
+			stack: []models.Token{
+				{Kind: models.NumberToken, Value: "1"},
+				{Kind: models.NumberToken, Value: "2"},
 			},
-			args: args{token: Token{Kind: NumberToken, Value: "3"}},
-			wantStack: []Token{
-				{Kind: NumberToken, Value: "1"},
-				{Kind: NumberToken, Value: "2"},
-				{Kind: NumberToken, Value: "3"},
+			args: args{token: models.Token{Kind: models.NumberToken, Value: "3"}},
+			wantStack: []models.Token{
+				{Kind: models.NumberToken, Value: "1"},
+				{Kind: models.NumberToken, Value: "2"},
+				{Kind: models.NumberToken, Value: "3"},
 			},
 		},
 		{
 			name:      "empty",
-			stack:     []Token{},
-			args:      args{token: Token{Kind: NumberToken, Value: "3"}},
-			wantStack: []Token{{Kind: NumberToken, Value: "3"}},
+			stack:     []models.Token{},
+			args:      args{token: models.Token{Kind: models.NumberToken, Value: "3"}},
+			wantStack: []models.Token{{Kind: models.NumberToken, Value: "3"}},
 		},
 	}
 	for _, testCase := range testsCases {
@@ -50,22 +51,22 @@ func TestTokenStack_Pop(test *testing.T) {
 	testsCases := []struct {
 		name      string
 		stack     TokenStack
-		wantToken Token
+		wantToken models.Token
 		wantOk    bool
 	}{
 		{
 			name: "nonempty",
-			stack: []Token{
-				{Kind: NumberToken, Value: "1"},
-				{Kind: NumberToken, Value: "2"},
+			stack: []models.Token{
+				{Kind: models.NumberToken, Value: "1"},
+				{Kind: models.NumberToken, Value: "2"},
 			},
-			wantToken: Token{Kind: NumberToken, Value: "2"},
+			wantToken: models.Token{Kind: models.NumberToken, Value: "2"},
 			wantOk:    true,
 		},
 		{
 			name:      "empty",
-			stack:     []Token{},
-			wantToken: Token{},
+			stack:     []models.Token{},
+			wantToken: models.Token{},
 			wantOk:    false,
 		},
 	}

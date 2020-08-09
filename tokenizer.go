@@ -4,13 +4,9 @@ import (
 	"fmt"
 	"strings"
 	"unicode"
-)
 
-// Token ...
-type Token struct {
-	Kind  TokenKind
-	Value string
-}
+	"github.com/irenicaa/go-calculator/models"
+)
 
 type tokenizerState int
 
@@ -24,7 +20,7 @@ const (
 
 // Tokenizer ...
 type Tokenizer struct {
-	tokens []Token
+	tokens []models.Token
 	state  tokenizerState
 	buffer string
 }
@@ -96,7 +92,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 }
 
 // Finalize ...
-func (tokenizer *Tokenizer) Finalize() ([]Token, error) {
+func (tokenizer *Tokenizer) Finalize() ([]models.Token, error) {
 	err := tokenizer.resetBuffer(eoi)
 	if err != nil {
 		return nil, err
@@ -114,8 +110,8 @@ func (tokenizer Tokenizer) isExponentEmpty() bool {
 	return unicode.ToLower(rune(lastSymbol)) == 'e'
 }
 
-func (tokenizer *Tokenizer) addTokenFromBuffer(kind TokenKind) {
-	token := Token{kind, tokenizer.buffer}
+func (tokenizer *Tokenizer) addTokenFromBuffer(kind models.TokenKind) {
+	token := models.Token{kind, tokenizer.buffer}
 	tokenizer.tokens = append(tokenizer.tokens, token)
 
 	tokenizer.buffer = ""
@@ -123,8 +119,8 @@ func (tokenizer *Tokenizer) addTokenFromBuffer(kind TokenKind) {
 
 func (tokenizer *Tokenizer) addTokenFromSymbol(symbol rune) {
 	// lack of the error is guaranteed by the calling function
-	kind, _ := ParseTokenKind(symbol)
-	token := Token{kind, string(symbol)}
+	kind, _ := models.ParseTokenKind(symbol)
+	token := models.Token{kind, string(symbol)}
 	tokenizer.tokens = append(tokenizer.tokens, token)
 
 	tokenizer.state = defaultTokenizerState
@@ -140,15 +136,15 @@ func (tokenizer *Tokenizer) resetBuffer(symbolIndex position) error {
 			)
 		}
 
-		tokenizer.addTokenFromBuffer(NumberToken)
+		tokenizer.addTokenFromBuffer(models.NumberToken)
 	case exponentTokenizerState:
 		if tokenizer.isExponentEmpty() {
 			return fmt.Errorf("empty exponent part at %s", symbolIndex)
 		}
 
-		tokenizer.addTokenFromBuffer(NumberToken)
+		tokenizer.addTokenFromBuffer(models.NumberToken)
 	case identifierTokenizerState:
-		tokenizer.addTokenFromBuffer(IdentifierToken)
+		tokenizer.addTokenFromBuffer(models.IdentifierToken)
 	}
 
 	return nil

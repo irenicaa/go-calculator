@@ -1,17 +1,19 @@
 package calculator
 
+import "github.com/irenicaa/go-calculator/models"
+
 // TokenStack ...
-type TokenStack []Token
+type TokenStack []models.Token
 
 // Push ...
-func (stack *TokenStack) Push(token Token) {
+func (stack *TokenStack) Push(token models.Token) {
 	*stack = append(*stack, token)
 }
 
 // Pop ...
-func (stack *TokenStack) Pop() (Token, bool) {
+func (stack *TokenStack) Pop() (models.Token, bool) {
 	if len(*stack) == 0 {
-		return Token{}, false
+		return models.Token{}, false
 	}
 
 	token := (*stack)[len(*stack)-1]

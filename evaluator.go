@@ -4,13 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-)
 
-// Function ...
-type Function struct {
-	Arity   int
-	Handler func(arguments []float64) float64
-}
+	"github.com/irenicaa/go-calculator/models"
+)
 
 // Evaluator ...
 type Evaluator struct {
@@ -19,13 +15,13 @@ type Evaluator struct {
 
 // Evaluate ...
 func (evaluator *Evaluator) Evaluate(
-	commands []Command,
+	commands []models.Command,
 	variables map[string]float64,
-	functions map[string]Function,
+	functions map[string]models.Function,
 ) error {
 	for commandIndex, command := range commands {
 		switch command.Kind {
-		case PushNumberCommand:
+		case models.PushNumberCommand:
 			number, err := strconv.ParseFloat(command.Operand, 64)
 			if err != nil {
 				return fmt.Errorf(
@@ -37,7 +33,7 @@ func (evaluator *Evaluator) Evaluate(
 			}
 
 			evaluator.stack.Push(number)
-		case PushVariableCommand:
+		case models.PushVariableCommand:
 			number, ok := variables[command.Operand]
 			if !ok {
 				return fmt.Errorf(
@@ -48,7 +44,7 @@ func (evaluator *Evaluator) Evaluate(
 			}
 
 			evaluator.stack.Push(number)
-		case CallFunctionCommand:
+		case models.CallFunctionCommand:
 			function, ok := functions[command.Operand]
 			if !ok {
 				return fmt.Errorf(

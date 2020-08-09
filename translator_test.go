@@ -3,250 +3,251 @@ package calculator
 import (
 	"testing"
 
+	"github.com/irenicaa/go-calculator/models"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTranslator(test *testing.T) {
 	type args struct {
-		tokens    []Token
+		tokens    []models.Token
 		functions map[string]struct{}
 	}
 
 	testsCases := []struct {
 		name         string
 		args         args
-		wantCommands []Command
+		wantCommands []models.Command
 		wantErr      string
 	}{
 		{
 			name: "number",
 			args: args{
-				tokens:    []Token{{Kind: NumberToken, Value: "23"}},
+				tokens:    []models.Token{{Kind: models.NumberToken, Value: "23"}},
 				functions: nil,
 			},
-			wantCommands: []Command{{Kind: PushNumberCommand, Operand: "23"}},
+			wantCommands: []models.Command{{Kind: models.PushNumberCommand, Operand: "23"}},
 			wantErr:      "",
 		},
 		{
 			name: "identifier",
 			args: args{
-				tokens:    []Token{{Kind: IdentifierToken, Value: "test"}},
+				tokens:    []models.Token{{Kind: models.IdentifierToken, Value: "test"}},
 				functions: nil,
 			},
-			wantCommands: []Command{{Kind: PushVariableCommand, Operand: "test"}},
+			wantCommands: []models.Command{{Kind: models.PushVariableCommand, Operand: "test"}},
 			wantErr:      "",
 		},
 		{
 			name: "few operators with the same precedence",
 			args: args{
-				tokens: []Token{
-					{Kind: NumberToken, Value: "12"},
-					{Kind: PlusToken, Value: "+"},
-					{Kind: NumberToken, Value: "23"},
-					{Kind: MinusToken, Value: "-"},
-					{Kind: NumberToken, Value: "42"},
+				tokens: []models.Token{
+					{Kind: models.NumberToken, Value: "12"},
+					{Kind: models.PlusToken, Value: "+"},
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.MinusToken, Value: "-"},
+					{Kind: models.NumberToken, Value: "42"},
 				},
 				functions: nil,
 			},
-			wantCommands: []Command{
-				{Kind: PushNumberCommand, Operand: "12"},
-				{Kind: PushNumberCommand, Operand: "23"},
-				{Kind: CallFunctionCommand, Operand: "+"},
-				{Kind: PushNumberCommand, Operand: "42"},
-				{Kind: CallFunctionCommand, Operand: "-"},
+			wantCommands: []models.Command{
+				{Kind: models.PushNumberCommand, Operand: "12"},
+				{Kind: models.PushNumberCommand, Operand: "23"},
+				{Kind: models.CallFunctionCommand, Operand: "+"},
+				{Kind: models.PushNumberCommand, Operand: "42"},
+				{Kind: models.CallFunctionCommand, Operand: "-"},
 			},
 			wantErr: "",
 		},
 		{
 			name: "few operators with different precedences (ascending)",
 			args: args{
-				tokens: []Token{
-					{Kind: NumberToken, Value: "12"},
-					{Kind: PlusToken, Value: "+"},
-					{Kind: NumberToken, Value: "23"},
-					{Kind: AsteriskToken, Value: "*"},
-					{Kind: NumberToken, Value: "42"},
+				tokens: []models.Token{
+					{Kind: models.NumberToken, Value: "12"},
+					{Kind: models.PlusToken, Value: "+"},
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.AsteriskToken, Value: "*"},
+					{Kind: models.NumberToken, Value: "42"},
 				},
 				functions: nil,
 			},
-			wantCommands: []Command{
-				{Kind: PushNumberCommand, Operand: "12"},
-				{Kind: PushNumberCommand, Operand: "23"},
-				{Kind: PushNumberCommand, Operand: "42"},
-				{Kind: CallFunctionCommand, Operand: "*"},
-				{Kind: CallFunctionCommand, Operand: "+"},
+			wantCommands: []models.Command{
+				{Kind: models.PushNumberCommand, Operand: "12"},
+				{Kind: models.PushNumberCommand, Operand: "23"},
+				{Kind: models.PushNumberCommand, Operand: "42"},
+				{Kind: models.CallFunctionCommand, Operand: "*"},
+				{Kind: models.CallFunctionCommand, Operand: "+"},
 			},
 			wantErr: "",
 		},
 		{
 			name: "few operators with different precedences (descending)",
 			args: args{
-				tokens: []Token{
-					{Kind: NumberToken, Value: "12"},
-					{Kind: AsteriskToken, Value: "*"},
-					{Kind: NumberToken, Value: "23"},
-					{Kind: PlusToken, Value: "+"},
-					{Kind: NumberToken, Value: "42"},
+				tokens: []models.Token{
+					{Kind: models.NumberToken, Value: "12"},
+					{Kind: models.AsteriskToken, Value: "*"},
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.PlusToken, Value: "+"},
+					{Kind: models.NumberToken, Value: "42"},
 				},
 				functions: nil,
 			},
-			wantCommands: []Command{
-				{Kind: PushNumberCommand, Operand: "12"},
-				{Kind: PushNumberCommand, Operand: "23"},
-				{Kind: CallFunctionCommand, Operand: "*"},
-				{Kind: PushNumberCommand, Operand: "42"},
-				{Kind: CallFunctionCommand, Operand: "+"},
+			wantCommands: []models.Command{
+				{Kind: models.PushNumberCommand, Operand: "12"},
+				{Kind: models.PushNumberCommand, Operand: "23"},
+				{Kind: models.CallFunctionCommand, Operand: "*"},
+				{Kind: models.PushNumberCommand, Operand: "42"},
+				{Kind: models.CallFunctionCommand, Operand: "+"},
 			},
 			wantErr: "",
 		},
 		{
 			name: "few operators with one pair of parentheses",
 			args: args{
-				tokens: []Token{
-					{Kind: LeftParenthesisToken, Value: "("},
-					{Kind: NumberToken, Value: "12"},
-					{Kind: PlusToken, Value: "+"},
-					{Kind: NumberToken, Value: "23"},
-					{Kind: RightParenthesisToken, Value: ")"},
-					{Kind: AsteriskToken, Value: "*"},
-					{Kind: NumberToken, Value: "42"},
+				tokens: []models.Token{
+					{Kind: models.LeftParenthesisToken, Value: "("},
+					{Kind: models.NumberToken, Value: "12"},
+					{Kind: models.PlusToken, Value: "+"},
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.RightParenthesisToken, Value: ")"},
+					{Kind: models.AsteriskToken, Value: "*"},
+					{Kind: models.NumberToken, Value: "42"},
 				},
 				functions: nil,
 			},
-			wantCommands: []Command{
-				{Kind: PushNumberCommand, Operand: "12"},
-				{Kind: PushNumberCommand, Operand: "23"},
-				{Kind: CallFunctionCommand, Operand: "+"},
-				{Kind: PushNumberCommand, Operand: "42"},
-				{Kind: CallFunctionCommand, Operand: "*"},
+			wantCommands: []models.Command{
+				{Kind: models.PushNumberCommand, Operand: "12"},
+				{Kind: models.PushNumberCommand, Operand: "23"},
+				{Kind: models.CallFunctionCommand, Operand: "+"},
+				{Kind: models.PushNumberCommand, Operand: "42"},
+				{Kind: models.CallFunctionCommand, Operand: "*"},
 			},
 			wantErr: "",
 		},
 		{
 			name: "few operators with few pairs of parentheses",
 			args: args{
-				tokens: []Token{
-					{Kind: LeftParenthesisToken, Value: "("},
-					{Kind: LeftParenthesisToken, Value: "("},
-					{Kind: NumberToken, Value: "5"},
-					{Kind: PlusToken, Value: "+"},
-					{Kind: NumberToken, Value: "12"},
-					{Kind: RightParenthesisToken, Value: ")"},
-					{Kind: AsteriskToken, Value: "*"},
-					{Kind: NumberToken, Value: "23"},
-					{Kind: RightParenthesisToken, Value: ")"},
-					{Kind: ExponentiationToken, Value: "^"},
-					{Kind: NumberToken, Value: "42"},
+				tokens: []models.Token{
+					{Kind: models.LeftParenthesisToken, Value: "("},
+					{Kind: models.LeftParenthesisToken, Value: "("},
+					{Kind: models.NumberToken, Value: "5"},
+					{Kind: models.PlusToken, Value: "+"},
+					{Kind: models.NumberToken, Value: "12"},
+					{Kind: models.RightParenthesisToken, Value: ")"},
+					{Kind: models.AsteriskToken, Value: "*"},
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.RightParenthesisToken, Value: ")"},
+					{Kind: models.ExponentiationToken, Value: "^"},
+					{Kind: models.NumberToken, Value: "42"},
 				},
 				functions: nil,
 			},
-			wantCommands: []Command{
-				{Kind: PushNumberCommand, Operand: "5"},
-				{Kind: PushNumberCommand, Operand: "12"},
-				{Kind: CallFunctionCommand, Operand: "+"},
-				{Kind: PushNumberCommand, Operand: "23"},
-				{Kind: CallFunctionCommand, Operand: "*"},
-				{Kind: PushNumberCommand, Operand: "42"},
-				{Kind: CallFunctionCommand, Operand: "^"},
+			wantCommands: []models.Command{
+				{Kind: models.PushNumberCommand, Operand: "5"},
+				{Kind: models.PushNumberCommand, Operand: "12"},
+				{Kind: models.CallFunctionCommand, Operand: "+"},
+				{Kind: models.PushNumberCommand, Operand: "23"},
+				{Kind: models.CallFunctionCommand, Operand: "*"},
+				{Kind: models.PushNumberCommand, Operand: "42"},
+				{Kind: models.CallFunctionCommand, Operand: "^"},
 			},
 			wantErr: "",
 		},
 		{
 			name: "function call without arguments",
 			args: args{
-				tokens: []Token{
-					{Kind: IdentifierToken, Value: "test"},
-					{Kind: LeftParenthesisToken, Value: "("},
-					{Kind: RightParenthesisToken, Value: ")"},
+				tokens: []models.Token{
+					{Kind: models.IdentifierToken, Value: "test"},
+					{Kind: models.LeftParenthesisToken, Value: "("},
+					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
 				functions: map[string]struct{}{"test": {}},
 			},
-			wantCommands: []Command{{Kind: CallFunctionCommand, Operand: "test"}},
+			wantCommands: []models.Command{{Kind: models.CallFunctionCommand, Operand: "test"}},
 			wantErr:      "",
 		},
 		{
 			name: "function call with one simple argument",
 			args: args{
-				tokens: []Token{
-					{Kind: IdentifierToken, Value: "test"},
-					{Kind: LeftParenthesisToken, Value: "("},
-					{Kind: NumberToken, Value: "23"},
-					{Kind: RightParenthesisToken, Value: ")"},
+				tokens: []models.Token{
+					{Kind: models.IdentifierToken, Value: "test"},
+					{Kind: models.LeftParenthesisToken, Value: "("},
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
 				functions: map[string]struct{}{"test": {}},
 			},
-			wantCommands: []Command{
-				{Kind: PushNumberCommand, Operand: "23"},
-				{Kind: CallFunctionCommand, Operand: "test"},
+			wantCommands: []models.Command{
+				{Kind: models.PushNumberCommand, Operand: "23"},
+				{Kind: models.CallFunctionCommand, Operand: "test"},
 			},
 			wantErr: "",
 		},
 		{
 			name: "function call with one complex argument",
 			args: args{
-				tokens: []Token{
-					{Kind: IdentifierToken, Value: "test"},
-					{Kind: LeftParenthesisToken, Value: "("},
-					{Kind: NumberToken, Value: "23"},
-					{Kind: PlusToken, Value: "+"},
-					{Kind: NumberToken, Value: "42"},
-					{Kind: RightParenthesisToken, Value: ")"},
+				tokens: []models.Token{
+					{Kind: models.IdentifierToken, Value: "test"},
+					{Kind: models.LeftParenthesisToken, Value: "("},
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.PlusToken, Value: "+"},
+					{Kind: models.NumberToken, Value: "42"},
+					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
 				functions: map[string]struct{}{"test": {}},
 			},
-			wantCommands: []Command{
-				{Kind: PushNumberCommand, Operand: "23"},
-				{Kind: PushNumberCommand, Operand: "42"},
-				{Kind: CallFunctionCommand, Operand: "+"},
-				{Kind: CallFunctionCommand, Operand: "test"},
+			wantCommands: []models.Command{
+				{Kind: models.PushNumberCommand, Operand: "23"},
+				{Kind: models.PushNumberCommand, Operand: "42"},
+				{Kind: models.CallFunctionCommand, Operand: "+"},
+				{Kind: models.CallFunctionCommand, Operand: "test"},
 			},
 			wantErr: "",
 		},
 		{
 			name: "function call with few simple arguments",
 			args: args{
-				tokens: []Token{
-					{Kind: IdentifierToken, Value: "test"},
-					{Kind: LeftParenthesisToken, Value: "("},
-					{Kind: NumberToken, Value: "23"},
-					{Kind: CommaToken, Value: ","},
-					{Kind: NumberToken, Value: "42"},
-					{Kind: RightParenthesisToken, Value: ")"},
+				tokens: []models.Token{
+					{Kind: models.IdentifierToken, Value: "test"},
+					{Kind: models.LeftParenthesisToken, Value: "("},
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.CommaToken, Value: ","},
+					{Kind: models.NumberToken, Value: "42"},
+					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
 				functions: map[string]struct{}{"test": {}},
 			},
-			wantCommands: []Command{
-				{Kind: PushNumberCommand, Operand: "23"},
-				{Kind: PushNumberCommand, Operand: "42"},
-				{Kind: CallFunctionCommand, Operand: "test"},
+			wantCommands: []models.Command{
+				{Kind: models.PushNumberCommand, Operand: "23"},
+				{Kind: models.PushNumberCommand, Operand: "42"},
+				{Kind: models.CallFunctionCommand, Operand: "test"},
 			},
 			wantErr: "",
 		},
 		{
 			name: "function call with few complex arguments",
 			args: args{
-				tokens: []Token{
-					{Kind: IdentifierToken, Value: "test"},
-					{Kind: LeftParenthesisToken, Value: "("},
-					{Kind: NumberToken, Value: "5"},
-					{Kind: PlusToken, Value: "+"},
-					{Kind: NumberToken, Value: "12"},
-					{Kind: CommaToken, Value: ","},
-					{Kind: NumberToken, Value: "23"},
-					{Kind: MinusToken, Value: "-"},
-					{Kind: NumberToken, Value: "42"},
-					{Kind: RightParenthesisToken, Value: ")"},
+				tokens: []models.Token{
+					{Kind: models.IdentifierToken, Value: "test"},
+					{Kind: models.LeftParenthesisToken, Value: "("},
+					{Kind: models.NumberToken, Value: "5"},
+					{Kind: models.PlusToken, Value: "+"},
+					{Kind: models.NumberToken, Value: "12"},
+					{Kind: models.CommaToken, Value: ","},
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.MinusToken, Value: "-"},
+					{Kind: models.NumberToken, Value: "42"},
+					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
 				functions: map[string]struct{}{"test": {}},
 			},
-			wantCommands: []Command{
-				{Kind: PushNumberCommand, Operand: "5"},
-				{Kind: PushNumberCommand, Operand: "12"},
-				{Kind: CallFunctionCommand, Operand: "+"},
-				{Kind: PushNumberCommand, Operand: "23"},
-				{Kind: PushNumberCommand, Operand: "42"},
-				{Kind: CallFunctionCommand, Operand: "-"},
-				{Kind: CallFunctionCommand, Operand: "test"},
+			wantCommands: []models.Command{
+				{Kind: models.PushNumberCommand, Operand: "5"},
+				{Kind: models.PushNumberCommand, Operand: "12"},
+				{Kind: models.CallFunctionCommand, Operand: "+"},
+				{Kind: models.PushNumberCommand, Operand: "23"},
+				{Kind: models.PushNumberCommand, Operand: "42"},
+				{Kind: models.CallFunctionCommand, Operand: "-"},
+				{Kind: models.CallFunctionCommand, Operand: "test"},
 			},
 			wantErr: "",
 		},
@@ -255,13 +256,13 @@ func TestTranslator(test *testing.T) {
 		{
 			name: "missed left parenthesis",
 			args: args{
-				tokens: []Token{
-					{Kind: NumberToken, Value: "12"},
-					{Kind: PlusToken, Value: "+"},
-					{Kind: NumberToken, Value: "23"},
-					{Kind: RightParenthesisToken, Value: ")"},
-					{Kind: AsteriskToken, Value: "*"},
-					{Kind: NumberToken, Value: "42"},
+				tokens: []models.Token{
+					{Kind: models.NumberToken, Value: "12"},
+					{Kind: models.PlusToken, Value: "+"},
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.RightParenthesisToken, Value: ")"},
+					{Kind: models.AsteriskToken, Value: "*"},
+					{Kind: models.NumberToken, Value: "42"},
 				},
 				functions: nil,
 			},
@@ -271,12 +272,12 @@ func TestTranslator(test *testing.T) {
 		{
 			name: "missed left parenthesis in a function call",
 			args: args{
-				tokens: []Token{
-					{Kind: IdentifierToken, Value: "test"},
-					{Kind: NumberToken, Value: "23"},
-					{Kind: CommaToken, Value: ","},
-					{Kind: NumberToken, Value: "42"},
-					{Kind: RightParenthesisToken, Value: ")"},
+				tokens: []models.Token{
+					{Kind: models.IdentifierToken, Value: "test"},
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.CommaToken, Value: ","},
+					{Kind: models.NumberToken, Value: "42"},
+					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
 				functions: map[string]struct{}{"test": {}},
 			},
@@ -286,11 +287,11 @@ func TestTranslator(test *testing.T) {
 		{
 			name: "missed function name and left parenthesis in a function call",
 			args: args{
-				tokens: []Token{
-					{Kind: NumberToken, Value: "23"},
-					{Kind: CommaToken, Value: ","},
-					{Kind: NumberToken, Value: "42"},
-					{Kind: RightParenthesisToken, Value: ")"},
+				tokens: []models.Token{
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.CommaToken, Value: ","},
+					{Kind: models.NumberToken, Value: "42"},
+					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
 				functions: nil,
 			},
@@ -300,13 +301,13 @@ func TestTranslator(test *testing.T) {
 		{
 			name: "missed right parenthesis",
 			args: args{
-				tokens: []Token{
-					{Kind: LeftParenthesisToken, Value: "("},
-					{Kind: NumberToken, Value: "12"},
-					{Kind: PlusToken, Value: "+"},
-					{Kind: NumberToken, Value: "23"},
-					{Kind: AsteriskToken, Value: "*"},
-					{Kind: NumberToken, Value: "42"},
+				tokens: []models.Token{
+					{Kind: models.LeftParenthesisToken, Value: "("},
+					{Kind: models.NumberToken, Value: "12"},
+					{Kind: models.PlusToken, Value: "+"},
+					{Kind: models.NumberToken, Value: "23"},
+					{Kind: models.AsteriskToken, Value: "*"},
+					{Kind: models.NumberToken, Value: "42"},
 				},
 				functions: nil,
 			},
@@ -316,7 +317,7 @@ func TestTranslator(test *testing.T) {
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			gotCommands := []Command(nil)
+			gotCommands := []models.Command(nil)
 
 			translator := Translator{}
 			gotErr := translator.Translate(testCase.args.tokens, testCase.args.functions)
@@ -336,65 +337,65 @@ func TestTranslator(test *testing.T) {
 
 func TestTranslator_withSequentialCalls(test *testing.T) {
 	type args struct {
-		tokenGroups [][]Token
+		tokenGroups [][]models.Token
 		functions   map[string]struct{}
 	}
 
 	testsCases := []struct {
 		name         string
 		args         args
-		wantCommands []Command
+		wantCommands []models.Command
 	}{
 		{
 			name: "few operators with one pair of parentheses",
 			args: args{
-				tokenGroups: [][]Token{
+				tokenGroups: [][]models.Token{
 					{
-						{Kind: LeftParenthesisToken, Value: "("},
-						{Kind: NumberToken, Value: "12"},
-						{Kind: PlusToken, Value: "+"},
-						{Kind: NumberToken, Value: "23"},
+						{Kind: models.LeftParenthesisToken, Value: "("},
+						{Kind: models.NumberToken, Value: "12"},
+						{Kind: models.PlusToken, Value: "+"},
+						{Kind: models.NumberToken, Value: "23"},
 					},
 					{
-						{Kind: RightParenthesisToken, Value: ")"},
-						{Kind: AsteriskToken, Value: "*"},
-						{Kind: NumberToken, Value: "42"},
+						{Kind: models.RightParenthesisToken, Value: ")"},
+						{Kind: models.AsteriskToken, Value: "*"},
+						{Kind: models.NumberToken, Value: "42"},
 					},
 				},
 				functions: nil,
 			},
-			wantCommands: []Command{
-				{Kind: PushNumberCommand, Operand: "12"},
-				{Kind: PushNumberCommand, Operand: "23"},
-				{Kind: CallFunctionCommand, Operand: "+"},
-				{Kind: PushNumberCommand, Operand: "42"},
-				{Kind: CallFunctionCommand, Operand: "*"},
+			wantCommands: []models.Command{
+				{Kind: models.PushNumberCommand, Operand: "12"},
+				{Kind: models.PushNumberCommand, Operand: "23"},
+				{Kind: models.CallFunctionCommand, Operand: "+"},
+				{Kind: models.PushNumberCommand, Operand: "42"},
+				{Kind: models.CallFunctionCommand, Operand: "*"},
 			},
 		},
 		{
 			name: "function call with one simple argument",
 			args: args{
-				tokenGroups: [][]Token{
+				tokenGroups: [][]models.Token{
 					{
-						{Kind: IdentifierToken, Value: "test"},
+						{Kind: models.IdentifierToken, Value: "test"},
 					},
 					{
-						{Kind: LeftParenthesisToken, Value: "("},
-						{Kind: NumberToken, Value: "23"},
-						{Kind: RightParenthesisToken, Value: ")"},
+						{Kind: models.LeftParenthesisToken, Value: "("},
+						{Kind: models.NumberToken, Value: "23"},
+						{Kind: models.RightParenthesisToken, Value: ")"},
 					},
 				},
 				functions: map[string]struct{}{"test": {}},
 			},
-			wantCommands: []Command{
-				{Kind: PushNumberCommand, Operand: "23"},
-				{Kind: CallFunctionCommand, Operand: "test"},
+			wantCommands: []models.Command{
+				{Kind: models.PushNumberCommand, Operand: "23"},
+				{Kind: models.CallFunctionCommand, Operand: "test"},
 			},
 		},
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			gotCommands, gotErr := []Command(nil), error(nil)
+			gotCommands, gotErr := []models.Command(nil), error(nil)
 
 			translator := Translator{}
 			for _, tokenGroup := range testCase.args.tokenGroups {

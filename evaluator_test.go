@@ -3,14 +3,15 @@ package calculator
 import (
 	"testing"
 
+	"github.com/irenicaa/go-calculator/models"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestEvaluator(test *testing.T) {
 	type args struct {
-		commands  []Command
+		commands  []models.Command
 		variables map[string]float64
-		functions map[string]Function
+		functions map[string]models.Function
 	}
 
 	testsCases := []struct {
@@ -21,14 +22,14 @@ func TestEvaluator(test *testing.T) {
 	}{
 		{
 			name:       "without commands",
-			args:       args{commands: []Command{}, variables: nil, functions: nil},
+			args:       args{commands: []models.Command{}, variables: nil, functions: nil},
 			wantNumber: 0,
 			wantErr:    "number stack is empty",
 		},
 		{
 			name: "with the push number command (success)",
 			args: args{
-				commands:  []Command{{Kind: PushNumberCommand, Operand: "2.3"}},
+				commands:  []models.Command{{Kind: models.PushNumberCommand, Operand: "2.3"}},
 				variables: nil,
 				functions: nil,
 			},
@@ -38,7 +39,7 @@ func TestEvaluator(test *testing.T) {
 		{
 			name: "with the push number command (error)",
 			args: args{
-				commands:  []Command{{Kind: PushNumberCommand, Operand: "incorrect"}},
+				commands:  []models.Command{{Kind: models.PushNumberCommand, Operand: "incorrect"}},
 				variables: nil,
 				functions: nil,
 			},
@@ -50,7 +51,7 @@ func TestEvaluator(test *testing.T) {
 		{
 			name: "with the push variable command (success)",
 			args: args{
-				commands:  []Command{{Kind: PushVariableCommand, Operand: "test"}},
+				commands:  []models.Command{{Kind: models.PushVariableCommand, Operand: "test"}},
 				variables: map[string]float64{"test": 2.3},
 				functions: nil,
 			},
@@ -60,7 +61,7 @@ func TestEvaluator(test *testing.T) {
 		{
 			name: "with the push variable command (error)",
 			args: args{
-				commands:  []Command{{Kind: PushVariableCommand, Operand: "unknown"}},
+				commands:  []models.Command{{Kind: models.PushVariableCommand, Operand: "unknown"}},
 				variables: map[string]float64{"test": 2.3},
 				functions: nil,
 			},
@@ -71,13 +72,13 @@ func TestEvaluator(test *testing.T) {
 		{
 			name: "with the call function command (success)",
 			args: args{
-				commands: []Command{
-					{Kind: PushNumberCommand, Operand: "2"},
-					{Kind: PushNumberCommand, Operand: "3"},
-					{Kind: CallFunctionCommand, Operand: "sub"},
+				commands: []models.Command{
+					{Kind: models.PushNumberCommand, Operand: "2"},
+					{Kind: models.PushNumberCommand, Operand: "3"},
+					{Kind: models.CallFunctionCommand, Operand: "sub"},
 				},
 				variables: nil,
-				functions: map[string]Function{
+				functions: map[string]models.Function{
 					"sub": {
 						Arity: 2,
 						Handler: func(arguments []float64) float64 {
@@ -92,13 +93,13 @@ func TestEvaluator(test *testing.T) {
 		{
 			name: "with the call function command (error with an unknown function)",
 			args: args{
-				commands: []Command{
-					{Kind: PushNumberCommand, Operand: "2"},
-					{Kind: PushNumberCommand, Operand: "3"},
-					{Kind: CallFunctionCommand, Operand: "unknown"},
+				commands: []models.Command{
+					{Kind: models.PushNumberCommand, Operand: "2"},
+					{Kind: models.PushNumberCommand, Operand: "3"},
+					{Kind: models.CallFunctionCommand, Operand: "unknown"},
 				},
 				variables: nil,
-				functions: map[string]Function{
+				functions: map[string]models.Function{
 					"sub": {
 						Arity: 2,
 						Handler: func(arguments []float64) float64 {
@@ -114,12 +115,12 @@ func TestEvaluator(test *testing.T) {
 		{
 			name: "with the call function command (error with lack of arguments)",
 			args: args{
-				commands: []Command{
-					{Kind: PushNumberCommand, Operand: "2"},
-					{Kind: CallFunctionCommand, Operand: "sub"},
+				commands: []models.Command{
+					{Kind: models.PushNumberCommand, Operand: "2"},
+					{Kind: models.CallFunctionCommand, Operand: "sub"},
 				},
 				variables: nil,
-				functions: map[string]Function{
+				functions: map[string]models.Function{
 					"sub": {
 						Arity: 2,
 						Handler: func(arguments []float64) float64 {
@@ -159,9 +160,9 @@ func TestEvaluator(test *testing.T) {
 
 func TestEvaluator_withSequentialCalls(test *testing.T) {
 	type args struct {
-		commandGroups [][]Command
+		commandGroups [][]models.Command
 		variables     map[string]float64
-		functions     map[string]Function
+		functions     map[string]models.Function
 	}
 
 	testsCases := []struct {
@@ -172,17 +173,17 @@ func TestEvaluator_withSequentialCalls(test *testing.T) {
 		{
 			name: "with the call function command",
 			args: args{
-				commandGroups: [][]Command{
+				commandGroups: [][]models.Command{
 					{
-						{Kind: PushNumberCommand, Operand: "2"},
-						{Kind: PushNumberCommand, Operand: "3"},
+						{Kind: models.PushNumberCommand, Operand: "2"},
+						{Kind: models.PushNumberCommand, Operand: "3"},
 					},
 					{
-						{Kind: CallFunctionCommand, Operand: "sub"},
+						{Kind: models.CallFunctionCommand, Operand: "sub"},
 					},
 				},
 				variables: nil,
-				functions: map[string]Function{
+				functions: map[string]models.Function{
 					"sub": {
 						Arity: 2,
 						Handler: func(arguments []float64) float64 {

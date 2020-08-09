@@ -3,55 +3,41 @@ package calculator
 import (
 	"errors"
 	"fmt"
+
+	"github.com/irenicaa/go-calculator/models"
 )
 
 var errStop = errors.New("stop")
 var errStopAndRestore = errors.New("stop and restore")
 
-type stackChecker func(tokenOnStack Token, ok bool) error
-
-// CommandKind ...
-type CommandKind int
-
-// ...
-const (
-	PushNumberCommand CommandKind = iota
-	PushVariableCommand
-	CallFunctionCommand
-)
-
-// Command ...
-type Command struct {
-	Kind    CommandKind
-	Operand string
-}
+type stackChecker func(tokenOnStack models.Token, ok bool) error
 
 // Translator ...
 type Translator struct {
-	commands []Command
+	commands []models.Command
 	stack    TokenStack
 }
 
 // Translate ...
 func (translator *Translator) Translate(
-	tokens []Token,
+	tokens []models.Token,
 	functions map[string]struct{},
 ) error {
 	for tokenIndex, token := range tokens {
 		switch {
-		case token.Kind == NumberToken:
-			translator.addCommand(PushNumberCommand, token)
-		case token.Kind == IdentifierToken:
+		case token.Kind == models.NumberToken:
+			translator.addCommand(models.PushNumberCommand, token)
+		case token.Kind == models.IdentifierToken:
 			_, ok := functions[token.Value]
 			if ok {
 				translator.stack.Push(token)
 				continue
 			}
 
-			translator.addCommand(PushVariableCommand, token)
+			translator.addCommand(models.PushVariableCommand, token)
 		case token.Kind.IsOperator():
 			// in this case, all errors will be processed inside the method
-			translator.unwindStack(func(tokenOnStack Token, ok bool) error {
+			translator.unwindStack(func(tokenOnStack models.Token, ok bool) error {
 				if !ok {
 					return errStop
 				}
@@ -66,10 +52,10 @@ func (translator *Translator) Translate(
 			})
 
 			translator.stack.Push(token)
-		case token.Kind == LeftParenthesisToken:
+		case token.Kind == models.LeftParenthesisToken:
 			translator.stack.Push(token)
-		case token.Kind == RightParenthesisToken:
-			err := translator.unwindStack(func(tokenOnStack Token, ok bool) error {
+		case token.Kind == models.RightParenthesisToken:
+			err := translator.unwindStack(func(tokenOnStack models.Token, ok bool) error {
 				if !ok {
 					return fmt.Errorf(
 						"missed pair for token %+v with number #%d",
@@ -77,7 +63,7 @@ func (translator *Translator) Translate(
 						tokenIndex,
 					)
 				}
-				if tokenOnStack.Kind == LeftParenthesisToken {
+				if tokenOnStack.Kind == models.LeftParenthesisToken {
 					return errStop
 				}
 
@@ -86,8 +72,8 @@ func (translator *Translator) Translate(
 			if err != nil {
 				return err
 			}
-		case token.Kind == CommaToken:
-			err := translator.unwindStack(func(tokenOnStack Token, ok bool) error {
+		case token.Kind == models.CommaToken:
+			err := translator.unwindStack(func(tokenOnStack models.Token, ok bool) error {
 				if !ok {
 					return fmt.Errorf(
 						"missed pair for token %+v with number #%d",
@@ -95,7 +81,7 @@ func (translator *Translator) Translate(
 						tokenIndex,
 					)
 				}
-				if tokenOnStack.Kind == LeftParenthesisToken {
+				if tokenOnStack.Kind == models.LeftParenthesisToken {
 					return errStopAndRestore
 				}
 				if !tokenOnStack.Kind.IsOperator() {
@@ -114,8 +100,8 @@ func (translator *Translator) Translate(
 }
 
 // Finalize ...
-func (translator *Translator) Finalize() ([]Command, error) {
-	err := translator.unwindStack(func(tokenOnStack Token, ok bool) error {
+func (translator *Translator) Finalize() ([]models.Command, error) {
+	err := translator.unwindStack(func(tokenOnStack models.Token, ok bool) error {
 		if !ok {
 			return errStop
 		}
@@ -132,8 +118,8 @@ func (translator *Translator) Finalize() ([]Command, error) {
 	return translator.commands, nil
 }
 
-func (translator *Translator) addCommand(kind CommandKind, token Token) {
-	command := Command{kind, token.Value}
+func (translator *Translator) addCommand(kind models.CommandKind, token models.Token) {
+	command := models.Command{kind, token.Value}
 	translator.commands = append(translator.commands, command)
 }
 
@@ -154,6 +140,6 @@ func (translator *Translator) unwindStack(checker stackChecker) error {
 			return err
 		}
 
-		translator.addCommand(CallFunctionCommand, tokenOnStack)
+		translator.addCommand(models.CallFunctionCommand, tokenOnStack)
 	}
 }
