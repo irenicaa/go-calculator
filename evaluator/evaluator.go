@@ -1,16 +1,17 @@
-package calculator
+package evaluator
 
 import (
 	"errors"
 	"fmt"
 	"strconv"
 
+	"github.com/irenicaa/go-calculator/containers"
 	"github.com/irenicaa/go-calculator/models"
 )
 
 // Evaluator ...
 type Evaluator struct {
-	stack NumberStack
+	stack containers.NumberStack
 }
 
 // Evaluate ...

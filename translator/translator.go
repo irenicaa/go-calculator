@@ -1,9 +1,10 @@
-package calculator
+package translator
 
 import (
 	"errors"
 	"fmt"
 
+	"github.com/irenicaa/go-calculator/containers"
 	"github.com/irenicaa/go-calculator/models"
 )
 
@@ -15,7 +16,7 @@ type stackChecker func(tokenOnStack models.Token, ok bool) error
 // Translator ...
 type Translator struct {
 	commands []models.Command
-	stack    TokenStack
+	stack    containers.TokenStack
 }
 
 // Translate ...

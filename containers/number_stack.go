@@ -1,4 +1,4 @@
-package calculator
+package containers
 
 // NumberStack ...
 type NumberStack []float64

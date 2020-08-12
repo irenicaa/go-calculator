@@ -1,4 +1,4 @@
-package calculator
+package containers
 
 import "github.com/irenicaa/go-calculator/models"
 

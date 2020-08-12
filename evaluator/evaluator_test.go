@@ -1,4 +1,4 @@
-package calculator
+package evaluator
 
 import (
 	"testing"
@@ -21,15 +21,21 @@ func TestEvaluator(test *testing.T) {
 		wantErr    string
 	}{
 		{
-			name:       "without commands",
-			args:       args{commands: []models.Command{}, variables: nil, functions: nil},
+			name: "without commands",
+			args: args{
+				commands:  []models.Command{},
+				variables: nil,
+				functions: nil,
+			},
 			wantNumber: 0,
 			wantErr:    "number stack is empty",
 		},
 		{
 			name: "with the push number command (success)",
 			args: args{
-				commands:  []models.Command{{Kind: models.PushNumberCommand, Operand: "2.3"}},
+				commands: []models.Command{
+					{Kind: models.PushNumberCommand, Operand: "2.3"},
+				},
 				variables: nil,
 				functions: nil,
 			},
@@ -39,7 +45,9 @@ func TestEvaluator(test *testing.T) {
 		{
 			name: "with the push number command (error)",
 			args: args{
-				commands:  []models.Command{{Kind: models.PushNumberCommand, Operand: "incorrect"}},
+				commands: []models.Command{
+					{Kind: models.PushNumberCommand, Operand: "incorrect"},
+				},
 				variables: nil,
 				functions: nil,
 			},
@@ -51,7 +59,9 @@ func TestEvaluator(test *testing.T) {
 		{
 			name: "with the push variable command (success)",
 			args: args{
-				commands:  []models.Command{{Kind: models.PushVariableCommand, Operand: "test"}},
+				commands: []models.Command{
+					{Kind: models.PushVariableCommand, Operand: "test"},
+				},
 				variables: map[string]float64{"test": 2.3},
 				functions: nil,
 			},
@@ -61,7 +71,9 @@ func TestEvaluator(test *testing.T) {
 		{
 			name: "with the push variable command (error)",
 			args: args{
-				commands:  []models.Command{{Kind: models.PushVariableCommand, Operand: "unknown"}},
+				commands: []models.Command{
+					{Kind: models.PushVariableCommand, Operand: "unknown"},
+				},
 				variables: map[string]float64{"test": 2.3},
 				functions: nil,
 			},
