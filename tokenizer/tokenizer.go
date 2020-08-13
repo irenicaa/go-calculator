@@ -111,7 +111,7 @@ func (tokenizer Tokenizer) isExponentEmpty() bool {
 }
 
 func (tokenizer *Tokenizer) addTokenFromBuffer(kind models.TokenKind) {
-	token := models.Token{kind, tokenizer.buffer}
+	token := models.Token{Kind: kind, Value: tokenizer.buffer}
 	tokenizer.tokens = append(tokenizer.tokens, token)
 
 	tokenizer.buffer = ""
@@ -120,7 +120,7 @@ func (tokenizer *Tokenizer) addTokenFromBuffer(kind models.TokenKind) {
 func (tokenizer *Tokenizer) addTokenFromSymbol(symbol rune) {
 	// lack of the error is guaranteed by the calling function
 	kind, _ := models.ParseTokenKind(symbol)
-	token := models.Token{kind, string(symbol)}
+	token := models.Token{Kind: kind, Value: string(symbol)}
 	tokenizer.tokens = append(tokenizer.tokens, token)
 
 	tokenizer.state = defaultTokenizerState

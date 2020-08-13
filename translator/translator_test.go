@@ -25,8 +25,13 @@ func TestTranslator(test *testing.T) {
 				tokens:    []models.Token{{Kind: models.NumberToken, Value: "23"}},
 				functions: nil,
 			},
-			wantCommands: []models.Command{{Kind: models.PushNumberCommand, Operand: "23"}},
-			wantErr:      "",
+			wantCommands: []models.Command{
+				{
+					Kind:    models.PushNumberCommand,
+					Operand: "23",
+				},
+			},
+			wantErr: "",
 		},
 		{
 			name: "identifier",
@@ -34,8 +39,13 @@ func TestTranslator(test *testing.T) {
 				tokens:    []models.Token{{Kind: models.IdentifierToken, Value: "test"}},
 				functions: nil,
 			},
-			wantCommands: []models.Command{{Kind: models.PushVariableCommand, Operand: "test"}},
-			wantErr:      "",
+			wantCommands: []models.Command{
+				{
+					Kind:    models.PushVariableCommand,
+					Operand: "test",
+				},
+			},
+			wantErr: "",
 		},
 		{
 			name: "few operators with the same precedence",
@@ -162,8 +172,13 @@ func TestTranslator(test *testing.T) {
 				},
 				functions: map[string]struct{}{"test": {}},
 			},
-			wantCommands: []models.Command{{Kind: models.CallFunctionCommand, Operand: "test"}},
-			wantErr:      "",
+			wantCommands: []models.Command{
+				{
+					Kind:    models.CallFunctionCommand,
+					Operand: "test",
+				},
+			},
+			wantErr: "",
 		},
 		{
 			name: "function call with one simple argument",

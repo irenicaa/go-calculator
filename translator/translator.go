@@ -56,41 +56,43 @@ func (translator *Translator) Translate(
 		case token.Kind == models.LeftParenthesisToken:
 			translator.stack.Push(token)
 		case token.Kind == models.RightParenthesisToken:
-			err := translator.unwindStack(func(tokenOnStack models.Token, ok bool) error {
-				if !ok {
-					return fmt.Errorf(
-						"missed pair for token %+v with number #%d",
-						token,
-						tokenIndex,
-					)
-				}
-				if tokenOnStack.Kind == models.LeftParenthesisToken {
-					return errStop
-				}
+			err := translator.unwindStack(
+				func(tokenOnStack models.Token, ok bool) error {
+					if !ok {
+						return fmt.Errorf(
+							"missed pair for token %+v with number #%d",
+							token,
+							tokenIndex,
+						)
+					}
+					if tokenOnStack.Kind == models.LeftParenthesisToken {
+						return errStop
+					}
 
-				return nil
-			})
+					return nil
+				})
 			if err != nil {
 				return err
 			}
 		case token.Kind == models.CommaToken:
-			err := translator.unwindStack(func(tokenOnStack models.Token, ok bool) error {
-				if !ok {
-					return fmt.Errorf(
-						"missed pair for token %+v with number #%d",
-						token,
-						tokenIndex,
-					)
-				}
-				if tokenOnStack.Kind == models.LeftParenthesisToken {
-					return errStopAndRestore
-				}
-				if !tokenOnStack.Kind.IsOperator() {
-					return errStopAndRestore
-				}
+			err := translator.unwindStack(
+				func(tokenOnStack models.Token, ok bool) error {
+					if !ok {
+						return fmt.Errorf(
+							"missed pair for token %+v with number #%d",
+							token,
+							tokenIndex,
+						)
+					}
+					if tokenOnStack.Kind == models.LeftParenthesisToken {
+						return errStopAndRestore
+					}
+					if !tokenOnStack.Kind.IsOperator() {
+						return errStopAndRestore
+					}
 
-				return nil
-			})
+					return nil
+				})
 			if err != nil {
 				return err
 			}
@@ -119,8 +121,11 @@ func (translator *Translator) Finalize() ([]models.Command, error) {
 	return translator.commands, nil
 }
 
-func (translator *Translator) addCommand(kind models.CommandKind, token models.Token) {
-	command := models.Command{kind, token.Value}
+func (translator *Translator) addCommand(
+	kind models.CommandKind,
+	token models.Token,
+) {
+	command := models.Command{Kind: kind, Operand: token.Value}
 	translator.commands = append(translator.commands, command)
 }
 
