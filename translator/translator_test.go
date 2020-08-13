@@ -26,10 +26,7 @@ func TestTranslator(test *testing.T) {
 				functions: nil,
 			},
 			wantCommands: []models.Command{
-				{
-					Kind:    models.PushNumberCommand,
-					Operand: "23",
-				},
+				{Kind: models.PushNumberCommand, Operand: "23"},
 			},
 			wantErr: "",
 		},
@@ -40,10 +37,7 @@ func TestTranslator(test *testing.T) {
 				functions: nil,
 			},
 			wantCommands: []models.Command{
-				{
-					Kind:    models.PushVariableCommand,
-					Operand: "test",
-				},
+				{Kind: models.PushVariableCommand, Operand: "test"},
 			},
 			wantErr: "",
 		},
@@ -173,10 +167,7 @@ func TestTranslator(test *testing.T) {
 				functions: map[string]struct{}{"test": {}},
 			},
 			wantCommands: []models.Command{
-				{
-					Kind:    models.CallFunctionCommand,
-					Operand: "test",
-				},
+				{Kind: models.CallFunctionCommand, Operand: "test"},
 			},
 			wantErr: "",
 		},

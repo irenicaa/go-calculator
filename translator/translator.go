@@ -70,7 +70,8 @@ func (translator *Translator) Translate(
 					}
 
 					return nil
-				})
+				},
+			)
 			if err != nil {
 				return err
 			}
@@ -92,7 +93,8 @@ func (translator *Translator) Translate(
 					}
 
 					return nil
-				})
+				},
+			)
 			if err != nil {
 				return err
 			}
