@@ -26,7 +26,7 @@ type Tokenizer struct {
 }
 
 // Tokenize ...
-func (tokenizer *Tokenizer) Tokenize(code string) error {
+func (tokenizer *Tokenizer) Tokenize(code string) ([]models.Token, error) {
 	for symbolIndex, symbol := range code {
 		symbolPosition := position(symbolIndex)
 		switch {
@@ -47,7 +47,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 			if tokenizer.state != identifierTokenizerState {
 				err := tokenizer.resetBuffer(symbolPosition)
 				if err != nil {
-					return err
+					return nil, err
 				}
 			}
 
@@ -56,7 +56,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 		case unicode.IsSpace(symbol):
 			err := tokenizer.resetBuffer(symbolPosition)
 			if err != nil {
-				return err
+				return nil, err
 			}
 
 			tokenizer.state = defaultTokenizerState
@@ -70,7 +70,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 		case strings.ContainsRune("*/%^(),", symbol):
 			err := tokenizer.resetBuffer(symbolPosition)
 			if err != nil {
-				return err
+				return nil, err
 			}
 
 			tokenizer.addTokenFromSymbol(symbol)
@@ -82,13 +82,16 @@ func (tokenizer *Tokenizer) Tokenize(code string) error {
 				continue
 			}
 
-			return fmt.Errorf("unexpected fractional point at %s", symbolPosition)
+			return nil, fmt.Errorf("unexpected fractional point at %s", symbolPosition)
 		default:
-			return fmt.Errorf("unknown symbol %q at %s", symbol, symbolPosition)
+			return nil, fmt.Errorf("unknown symbol %q at %s", symbol, symbolPosition)
 		}
 	}
 
-	return nil
+	tokens := tokenizer.tokens
+	tokenizer.tokens = nil
+
+	return tokens, nil
 }
 
 // Finalize ...

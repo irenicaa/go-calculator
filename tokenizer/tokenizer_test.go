@@ -701,9 +701,12 @@ func TestTokenizer(test *testing.T) {
 			gotTokens := []models.Token(nil)
 
 			tokenizer := Tokenizer{}
-			gotErr := tokenizer.Tokenize(testCase.args.code)
+			tokens, gotErr := tokenizer.Tokenize(testCase.args.code)
+			gotTokens = append(gotTokens, tokens...)
+
 			if gotErr == nil {
-				gotTokens, gotErr = tokenizer.Finalize()
+				tokens, gotErr = tokenizer.Finalize()
+				gotTokens = append(gotTokens, tokens...)
 			}
 
 			assert.Equal(test, testCase.wantTokens, gotTokens)
@@ -746,13 +749,19 @@ func TestTokenizer_withSequentialCalls(test *testing.T) {
 
 			tokenizer := Tokenizer{}
 			for _, codePart := range testCase.args.codeParts {
-				gotErr = tokenizer.Tokenize(codePart)
+				tokens, err := tokenizer.Tokenize(codePart)
+
+				gotTokens = append(gotTokens, tokens...)
+				gotErr = err
 				if gotErr != nil {
 					break
 				}
 			}
 			if gotErr == nil {
-				gotTokens, gotErr = tokenizer.Finalize()
+				tokens, err := tokenizer.Finalize()
+
+				gotTokens = append(gotTokens, tokens...)
+				gotErr = err
 			}
 
 			assert.Equal(test, testCase.wantTokens, gotTokens)
