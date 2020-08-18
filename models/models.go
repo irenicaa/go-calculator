@@ -24,6 +24,6 @@ type Command struct {
 
 // Function ...
 type Function struct {
-	Arity   int
+	Arity   int // argument count
 	Handler func(arguments []float64) float64
 }

@@ -70,10 +70,7 @@ func (evaluator *Evaluator) Evaluate(
 				arguments = append(arguments, number)
 			}
 
-			for i := 0; i < function.Arity/2; i++ {
-				arguments[function.Arity-i-1], arguments[i] =
-					arguments[i], arguments[function.Arity-i-1]
-			}
+			reverseArguments(arguments)
 
 			number := function.Handler(arguments)
 			evaluator.stack.Push(number)
@@ -81,6 +78,14 @@ func (evaluator *Evaluator) Evaluate(
 	}
 
 	return nil
+}
+
+func reverseArguments(arguments []float64) {
+	arity := len(arguments)
+	for i := 0; i < arity/2; i++ {
+		arguments[arity-i-1], arguments[i] =
+			arguments[i], arguments[arity-i-1]
+	}
 }
 
 // Finalize ...
