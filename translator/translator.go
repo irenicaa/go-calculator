@@ -23,7 +23,7 @@ type Translator struct {
 func (translator *Translator) Translate(
 	tokens []models.Token,
 	functions map[string]struct{},
-) error {
+) ([]models.Command, error) {
 	for tokenIndex, token := range tokens {
 		switch {
 		case token.Kind == models.NumberToken:
@@ -73,7 +73,7 @@ func (translator *Translator) Translate(
 				},
 			)
 			if err != nil {
-				return err
+				return nil, err
 			}
 		case token.Kind == models.CommaToken:
 			err := translator.unwindStack(
@@ -96,12 +96,15 @@ func (translator *Translator) Translate(
 				},
 			)
 			if err != nil {
-				return err
+				return nil, err
 			}
 		}
 	}
 
-	return nil
+	commands := translator.commands
+	translator.commands = nil
+
+	return commands, nil
 }
 
 // Finalize ...

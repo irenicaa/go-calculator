@@ -317,8 +317,12 @@ func TestTranslator(test *testing.T) {
 				},
 				functions: nil,
 			},
-			wantCommands: nil,
-			wantErr:      "missed pair for token {Kind:8 Value:(}",
+			wantCommands: []models.Command{
+				{Kind: models.PushNumberCommand, Operand: "12"},
+				{Kind: models.PushNumberCommand, Operand: "23"},
+				{Kind: models.PushNumberCommand, Operand: "42"},
+			},
+			wantErr: "missed pair for token {Kind:8 Value:(}",
 		},
 	}
 	for _, testCase := range testsCases {
@@ -326,9 +330,15 @@ func TestTranslator(test *testing.T) {
 			gotCommands := []models.Command(nil)
 
 			translator := Translator{}
-			gotErr := translator.Translate(testCase.args.tokens, testCase.args.functions)
+			commands, gotErr := translator.Translate(
+				testCase.args.tokens,
+				testCase.args.functions,
+			)
+			gotCommands = append(gotCommands, commands...)
+
 			if gotErr == nil {
-				gotCommands, gotErr = translator.Finalize()
+				commands, gotErr = translator.Finalize()
+				gotCommands = append(gotCommands, commands...)
 			}
 
 			assert.Equal(test, testCase.wantCommands, gotCommands)
@@ -405,13 +415,22 @@ func TestTranslator_withSequentialCalls(test *testing.T) {
 
 			translator := Translator{}
 			for _, tokenGroup := range testCase.args.tokenGroups {
-				gotErr = translator.Translate(tokenGroup, testCase.args.functions)
+				commands, err := translator.Translate(
+					tokenGroup,
+					testCase.args.functions,
+				)
+
+				gotCommands = append(gotCommands, commands...)
+				gotErr = err
 				if gotErr != nil {
 					break
 				}
 			}
 			if gotErr == nil {
-				gotCommands, gotErr = translator.Finalize()
+				commands, err := translator.Finalize()
+
+				gotCommands = append(gotCommands, commands...)
+				gotErr = err
 			}
 
 			assert.Equal(test, testCase.wantCommands, gotCommands)
