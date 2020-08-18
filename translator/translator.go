@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/irenicaa/go-calculator/containers"
 	"github.com/irenicaa/go-calculator/models"
+	"github.com/irenicaa/go-calculator/models/containers"
 )
 
 var errStop = errors.New("stop")

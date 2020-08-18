@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/irenicaa/go-calculator/containers"
 	"github.com/irenicaa/go-calculator/models"
+	"github.com/irenicaa/go-calculator/models/containers"
 )
 
 // Evaluator ...
