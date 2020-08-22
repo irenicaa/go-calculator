@@ -20,12 +20,16 @@ type Calculator struct {
 func (calculator *Calculator) Calculate(
 	code string,
 	variables map[string]float64,
-	functionsNames map[string]struct{},
 	functions map[string]models.Function,
 ) error {
 	tokens, err := calculator.tokenizer.Tokenize(code)
 	if err != nil {
 		return fmt.Errorf("unable to tokenize the code: %s", err)
+	}
+
+	functionsNames := map[string]struct{}{}
+	for name := range functions {
+		functionsNames[name] = struct{}{}
 	}
 
 	commands, err := calculator.translator.Translate(tokens, functionsNames)
