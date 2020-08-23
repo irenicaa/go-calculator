@@ -11,6 +11,7 @@ import (
 
 // Calculator ...
 type Calculator struct {
+	variables      map[string]float64
 	functions      map[string]models.Function
 	functionsNames map[string]struct{}
 
@@ -20,8 +21,12 @@ type Calculator struct {
 }
 
 // NewCalculator ...
-func NewCalculator(functions map[string]models.Function) *Calculator {
+func NewCalculator(
+	variables map[string]float64,
+	functions map[string]models.Function,
+) *Calculator {
 	calculator := Calculator{
+		variables:      variables,
 		functions:      functions,
 		functionsNames: map[string]struct{}{},
 	}
@@ -34,10 +39,7 @@ func NewCalculator(functions map[string]models.Function) *Calculator {
 }
 
 // Calculate ...
-func (calculator *Calculator) Calculate(
-	code string,
-	variables map[string]float64,
-) error {
+func (calculator *Calculator) Calculate(code string) error {
 	tokens, err := calculator.tokenizer.Tokenize(code)
 	if err != nil {
 		return fmt.Errorf("unable to tokenize the code: %s", err)
@@ -51,7 +53,11 @@ func (calculator *Calculator) Calculate(
 		return fmt.Errorf("unable to translate the tokens: %s", err)
 	}
 
-	err = calculator.evaluator.Evaluate(commands, variables, calculator.functions)
+	err = calculator.evaluator.Evaluate(
+		commands,
+		calculator.variables,
+		calculator.functions,
+	)
 	if err != nil {
 		return fmt.Errorf("unable to evaluate the commands: %s", err)
 	}
@@ -60,9 +66,7 @@ func (calculator *Calculator) Calculate(
 }
 
 // Finalize ...
-func (calculator *Calculator) Finalize(
-	variables map[string]float64,
-) (float64, error) {
+func (calculator *Calculator) Finalize() (float64, error) {
 	tokens, err := calculator.tokenizer.Finalize()
 	if err != nil {
 		return 0, fmt.Errorf("unable to finalize the tokenizer: %s", err)
@@ -82,7 +86,11 @@ func (calculator *Calculator) Finalize(
 	}
 	commands = append(commands, additionalCommands...)
 
-	err = calculator.evaluator.Evaluate(commands, variables, calculator.functions)
+	err = calculator.evaluator.Evaluate(
+		commands,
+		calculator.variables,
+		calculator.functions,
+	)
 	if err != nil {
 		return 0, fmt.Errorf("unable to evaluate the commands: %s", err)
 	}
