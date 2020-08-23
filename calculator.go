@@ -11,33 +11,47 @@ import (
 
 // Calculator ...
 type Calculator struct {
+	functions      map[string]models.Function
+	functionsNames map[string]struct{}
+
 	tokenizer  tokenizer.Tokenizer
 	translator translator.Translator
 	evaluator  evaluator.Evaluator
+}
+
+// NewCalculator ...
+func NewCalculator(functions map[string]models.Function) *Calculator {
+	calculator := Calculator{
+		functions:      functions,
+		functionsNames: map[string]struct{}{},
+	}
+
+	for name := range functions {
+		calculator.functionsNames[name] = struct{}{}
+	}
+
+	return &calculator
 }
 
 // Calculate ...
 func (calculator *Calculator) Calculate(
 	code string,
 	variables map[string]float64,
-	functions map[string]models.Function,
 ) error {
 	tokens, err := calculator.tokenizer.Tokenize(code)
 	if err != nil {
 		return fmt.Errorf("unable to tokenize the code: %s", err)
 	}
 
-	functionsNames := map[string]struct{}{}
-	for name := range functions {
-		functionsNames[name] = struct{}{}
-	}
-
-	commands, err := calculator.translator.Translate(tokens, functionsNames)
+	commands, err := calculator.translator.Translate(
+		tokens,
+		calculator.functionsNames,
+	)
 	if err != nil {
 		return fmt.Errorf("unable to translate the tokens: %s", err)
 	}
 
-	err = calculator.evaluator.Evaluate(commands, variables, functions)
+	err = calculator.evaluator.Evaluate(commands, variables, calculator.functions)
 	if err != nil {
 		return fmt.Errorf("unable to evaluate the commands: %s", err)
 	}
