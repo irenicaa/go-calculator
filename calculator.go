@@ -58,3 +58,39 @@ func (calculator *Calculator) Calculate(
 
 	return nil
 }
+
+// Finalize ...
+func (calculator *Calculator) Finalize(
+	variables map[string]float64,
+) (float64, error) {
+	tokens, err := calculator.tokenizer.Finalize()
+	if err != nil {
+		return 0, fmt.Errorf("unable to finalize the tokenizer: %s", err)
+	}
+
+	commands, err := calculator.translator.Translate(
+		tokens,
+		calculator.functionsNames,
+	)
+	if err != nil {
+		return 0, fmt.Errorf("unable to translate the tokens: %s", err)
+	}
+
+	additionalCommands, err := calculator.translator.Finalize()
+	if err != nil {
+		return 0, fmt.Errorf("unable to finalize the translator: %s", err)
+	}
+	commands = append(commands, additionalCommands...)
+
+	err = calculator.evaluator.Evaluate(commands, variables, calculator.functions)
+	if err != nil {
+		return 0, fmt.Errorf("unable to evaluate the commands: %s", err)
+	}
+
+	number, err := calculator.evaluator.Finalize()
+	if err != nil {
+		return 0, fmt.Errorf("unable to finalize the evaluator: %s", err)
+	}
+
+	return number, nil
+}
