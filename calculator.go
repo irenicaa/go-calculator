@@ -28,13 +28,8 @@ func NewCalculator(
 	calculator := Calculator{
 		variables:      variables,
 		functions:      functions,
-		functionsNames: models.FunctionNameGroup{},
+		functionsNames: functions.Names(),
 	}
-
-	for name := range functions {
-		calculator.functionsNames[name] = struct{}{}
-	}
-
 	return &calculator
 }
 

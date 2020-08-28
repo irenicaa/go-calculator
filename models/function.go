@@ -11,3 +11,13 @@ type FunctionNameGroup map[string]struct{}
 
 // FunctionGroup ...
 type FunctionGroup map[string]Function
+
+// Names ...
+func (functions FunctionGroup) Names() FunctionNameGroup {
+	functionsNames := FunctionNameGroup{}
+	for name := range functions {
+		functionsNames[name] = struct{}{}
+	}
+
+	return functionsNames
+}
