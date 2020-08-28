@@ -10,7 +10,7 @@ import (
 func TestCalculator(test *testing.T) {
 	type fields struct {
 		variables map[string]float64
-		functions map[string]models.Function
+		functions models.FunctionGroup
 	}
 	type args struct {
 		code string
@@ -49,7 +49,7 @@ func TestCalculator(test *testing.T) {
 func TestCalculator_withSequentialCalls(test *testing.T) {
 	type fields struct {
 		variables map[string]float64
-		functions map[string]models.Function
+		functions models.FunctionGroup
 	}
 	type args struct {
 		codeParts []string

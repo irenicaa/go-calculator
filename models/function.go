@@ -8,3 +8,6 @@ type Function struct {
 
 // FunctionNameGroup ...
 type FunctionNameGroup map[string]struct{}
+
+// FunctionGroup ...
+type FunctionGroup map[string]Function

@@ -12,7 +12,7 @@ import (
 // Calculator ...
 type Calculator struct {
 	variables      map[string]float64
-	functions      map[string]models.Function
+	functions      models.FunctionGroup
 	functionsNames models.FunctionNameGroup
 
 	tokenizer  tokenizer.Tokenizer
@@ -23,7 +23,7 @@ type Calculator struct {
 // NewCalculator ...
 func NewCalculator(
 	variables map[string]float64,
-	functions map[string]models.Function,
+	functions models.FunctionGroup,
 ) *Calculator {
 	calculator := Calculator{
 		variables:      variables,

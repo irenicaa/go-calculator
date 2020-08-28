@@ -11,7 +11,7 @@ func TestEvaluator(test *testing.T) {
 	type args struct {
 		commands  []models.Command
 		variables map[string]float64
-		functions map[string]models.Function
+		functions models.FunctionGroup
 	}
 
 	testsCases := []struct {
@@ -90,7 +90,7 @@ func TestEvaluator(test *testing.T) {
 					{Kind: models.CallFunctionCommand, Operand: "sub"},
 				},
 				variables: nil,
-				functions: map[string]models.Function{
+				functions: models.FunctionGroup{
 					"sub": {
 						Arity: 2,
 						Handler: func(arguments []float64) float64 {
@@ -111,7 +111,7 @@ func TestEvaluator(test *testing.T) {
 					{Kind: models.CallFunctionCommand, Operand: "unknown"},
 				},
 				variables: nil,
-				functions: map[string]models.Function{
+				functions: models.FunctionGroup{
 					"sub": {
 						Arity: 2,
 						Handler: func(arguments []float64) float64 {
@@ -132,7 +132,7 @@ func TestEvaluator(test *testing.T) {
 					{Kind: models.CallFunctionCommand, Operand: "sub"},
 				},
 				variables: nil,
-				functions: map[string]models.Function{
+				functions: models.FunctionGroup{
 					"sub": {
 						Arity: 2,
 						Handler: func(arguments []float64) float64 {
@@ -174,7 +174,7 @@ func TestEvaluator_withSequentialCalls(test *testing.T) {
 	type args struct {
 		commandGroups [][]models.Command
 		variables     map[string]float64
-		functions     map[string]models.Function
+		functions     models.FunctionGroup
 	}
 
 	testsCases := []struct {
@@ -195,7 +195,7 @@ func TestEvaluator_withSequentialCalls(test *testing.T) {
 					},
 				},
 				variables: nil,
-				functions: map[string]models.Function{
+				functions: models.FunctionGroup{
 					"sub": {
 						Arity: 2,
 						Handler: func(arguments []float64) float64 {
