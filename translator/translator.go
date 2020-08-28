@@ -22,7 +22,7 @@ type Translator struct {
 // Translate ...
 func (translator *Translator) Translate(
 	tokens []models.Token,
-	functions map[string]struct{},
+	functions models.FunctionNameGroup,
 ) ([]models.Command, error) {
 	for tokenIndex, token := range tokens {
 		switch {

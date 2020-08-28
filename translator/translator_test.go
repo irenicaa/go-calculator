@@ -10,7 +10,7 @@ import (
 func TestTranslator(test *testing.T) {
 	type args struct {
 		tokens    []models.Token
-		functions map[string]struct{}
+		functions models.FunctionNameGroup
 	}
 
 	testsCases := []struct {
@@ -164,7 +164,7 @@ func TestTranslator(test *testing.T) {
 					{Kind: models.LeftParenthesisToken, Value: "("},
 					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
-				functions: map[string]struct{}{"test": {}},
+				functions: models.FunctionNameGroup{"test": {}},
 			},
 			wantCommands: []models.Command{
 				{Kind: models.CallFunctionCommand, Operand: "test"},
@@ -180,7 +180,7 @@ func TestTranslator(test *testing.T) {
 					{Kind: models.NumberToken, Value: "23"},
 					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
-				functions: map[string]struct{}{"test": {}},
+				functions: models.FunctionNameGroup{"test": {}},
 			},
 			wantCommands: []models.Command{
 				{Kind: models.PushNumberCommand, Operand: "23"},
@@ -199,7 +199,7 @@ func TestTranslator(test *testing.T) {
 					{Kind: models.NumberToken, Value: "42"},
 					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
-				functions: map[string]struct{}{"test": {}},
+				functions: models.FunctionNameGroup{"test": {}},
 			},
 			wantCommands: []models.Command{
 				{Kind: models.PushNumberCommand, Operand: "23"},
@@ -220,7 +220,7 @@ func TestTranslator(test *testing.T) {
 					{Kind: models.NumberToken, Value: "42"},
 					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
-				functions: map[string]struct{}{"test": {}},
+				functions: models.FunctionNameGroup{"test": {}},
 			},
 			wantCommands: []models.Command{
 				{Kind: models.PushNumberCommand, Operand: "23"},
@@ -244,7 +244,7 @@ func TestTranslator(test *testing.T) {
 					{Kind: models.NumberToken, Value: "42"},
 					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
-				functions: map[string]struct{}{"test": {}},
+				functions: models.FunctionNameGroup{"test": {}},
 			},
 			wantCommands: []models.Command{
 				{Kind: models.PushNumberCommand, Operand: "5"},
@@ -285,7 +285,7 @@ func TestTranslator(test *testing.T) {
 					{Kind: models.NumberToken, Value: "42"},
 					{Kind: models.RightParenthesisToken, Value: ")"},
 				},
-				functions: map[string]struct{}{"test": {}},
+				functions: models.FunctionNameGroup{"test": {}},
 			},
 			wantCommands: nil,
 			wantErr:      "missed pair for token {Kind:9 Value:)} with number #4",
@@ -354,7 +354,7 @@ func TestTranslator(test *testing.T) {
 func TestTranslator_withSequentialCalls(test *testing.T) {
 	type args struct {
 		tokenGroups [][]models.Token
-		functions   map[string]struct{}
+		functions   models.FunctionNameGroup
 	}
 
 	testsCases := []struct {
@@ -401,7 +401,7 @@ func TestTranslator_withSequentialCalls(test *testing.T) {
 						{Kind: models.RightParenthesisToken, Value: ")"},
 					},
 				},
-				functions: map[string]struct{}{"test": {}},
+				functions: models.FunctionNameGroup{"test": {}},
 			},
 			wantCommands: []models.Command{
 				{Kind: models.PushNumberCommand, Operand: "23"},
