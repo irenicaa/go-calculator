@@ -67,14 +67,10 @@ func (calculator *Calculator) Finalize() (float64, error) {
 		return 0, fmt.Errorf("unable to finalize the tokenizer: %s", err)
 	}
 
-	commands, err := calculator.translator.Translate(
+	commands, _ := calculator.translator.Translate(
 		tokens,
 		calculator.functionsNames,
 	)
-	if err != nil {
-		return 0, fmt.Errorf("unable to translate the tokens: %s", err)
-	}
-
 	additionalCommands, err := calculator.translator.Finalize()
 	if err != nil {
 		return 0, fmt.Errorf("unable to finalize the translator: %s", err)
