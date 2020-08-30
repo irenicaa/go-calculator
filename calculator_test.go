@@ -22,7 +22,118 @@ func TestCalculator(test *testing.T) {
 		args       args
 		wantNumber float64
 		wantErr    string
-	}{}
+	}{
+		{
+			name: "success with numbers",
+			fields: fields{
+				variables: nil,
+				functions: models.FunctionGroup{
+					"+": {
+						Arity: 2,
+						Handler: func(arguments []float64) float64 {
+							return arguments[0] + arguments[1]
+						},
+					},
+				},
+			},
+			args:       args{code: "2 + 3"},
+			wantNumber: 5,
+			wantErr:    "",
+		},
+		{
+			name: "success with variables",
+			fields: fields{
+				variables: map[string]float64{"x": 2, "y": 3},
+				functions: models.FunctionGroup{
+					"+": {
+						Arity: 2,
+						Handler: func(arguments []float64) float64 {
+							return arguments[0] + arguments[1]
+						},
+					},
+				},
+			},
+			args:       args{code: "x + y"},
+			wantNumber: 5,
+			wantErr:    "",
+		},
+		// errors
+		{
+			name: "error with tokenization",
+			fields: fields{
+				variables: nil,
+				functions: nil,
+			},
+			args:       args{code: "2 @ 3"},
+			wantNumber: 0,
+			wantErr:    "unable to tokenize the code: unknown symbol '@' at position 2",
+		},
+		{
+			name: "error with translation",
+			fields: fields{
+				variables: nil,
+				functions: nil,
+			},
+			args:       args{code: "2 + 3)"},
+			wantNumber: 0,
+			wantErr: "unable to translate the tokens: missed pair for token " +
+				"{Kind:9 Value:)} with number #3",
+		},
+		{
+			name: "error with evaluation",
+			fields: fields{
+				variables: nil,
+				functions: nil,
+			},
+			args:       args{code: "x + 3"},
+			wantNumber: 0,
+			wantErr: "unable to evaluate the commands: unknown variable in command " +
+				"{Kind:1 Operand:x} with number #0",
+		},
+		{
+			name: "error with finalizing of tokenization",
+			fields: fields{
+				variables: nil,
+				functions: nil,
+			},
+			args:       args{code: "2 + ."},
+			wantNumber: 0,
+			wantErr: "unable to finalize the tokenizer: both integer and fractional " +
+				"parts are empty at EOI",
+		},
+		{
+			name: "error with finalizing of translation",
+			fields: fields{
+				variables: nil,
+				functions: nil,
+			},
+			args:       args{code: "(2 + 3"},
+			wantNumber: 0,
+			wantErr: "unable to finalize the translator: " +
+				"missed pair for token {Kind:8 Value:(}",
+		},
+		{
+			name: "error with evaluation during finalizing",
+			fields: fields{
+				variables: nil,
+				functions: nil,
+			},
+			args:       args{code: "2 + x"},
+			wantNumber: 0,
+			wantErr: "unable to evaluate the commands: unknown variable in command " +
+				"{Kind:1 Operand:x} with number #0",
+		},
+		{
+			name: "error with finalizing of evaluation",
+			fields: fields{
+				variables: nil,
+				functions: nil,
+			},
+			args:       args{code: ""},
+			wantNumber: 0,
+			wantErr:    "unable to finalize the evaluator: number stack is empty",
+		},
+	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			gotNumber := 0.0
