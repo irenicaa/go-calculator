@@ -57,6 +57,7 @@ func TestCalculator(test *testing.T) {
 			wantNumber: 5,
 			wantErr:    "",
 		},
+
 		// errors
 		{
 			name: "error with tokenization",
@@ -76,8 +77,8 @@ func TestCalculator(test *testing.T) {
 			},
 			args:       args{code: "2 + 3)"},
 			wantNumber: 0,
-			wantErr: "unable to translate the tokens: missed pair for token " +
-				"{Kind:9 Value:)} with number #3",
+			wantErr: "unable to translate the tokens: " +
+				"missed pair for token {Kind:9 Value:)} with number #3",
 		},
 		{
 			name: "error with evaluation",
@@ -87,8 +88,8 @@ func TestCalculator(test *testing.T) {
 			},
 			args:       args{code: "x + 3"},
 			wantNumber: 0,
-			wantErr: "unable to evaluate the commands: unknown variable in command " +
-				"{Kind:1 Operand:x} with number #0",
+			wantErr: "unable to evaluate the commands: " +
+				"unknown variable in command {Kind:1 Operand:x} with number #0",
 		},
 		{
 			name: "error with finalizing of tokenization",
@@ -98,8 +99,8 @@ func TestCalculator(test *testing.T) {
 			},
 			args:       args{code: "2 + ."},
 			wantNumber: 0,
-			wantErr: "unable to finalize the tokenizer: both integer and fractional " +
-				"parts are empty at EOI",
+			wantErr: "unable to finalize the tokenizer: " +
+				"both integer and fractional parts are empty at EOI",
 		},
 		{
 			name: "error with finalizing of translation",
@@ -120,8 +121,8 @@ func TestCalculator(test *testing.T) {
 			},
 			args:       args{code: "2 + x"},
 			wantNumber: 0,
-			wantErr: "unable to evaluate the commands: unknown variable in command " +
-				"{Kind:1 Operand:x} with number #0",
+			wantErr: "unable to evaluate the commands: " +
+				"unknown variable in command {Kind:1 Operand:x} with number #0",
 		},
 		{
 			name: "error with finalizing of evaluation",
