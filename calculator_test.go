@@ -171,7 +171,24 @@ func TestCalculator_withSequentialCalls(test *testing.T) {
 		fields     fields
 		args       args
 		wantNumber float64
-	}{}
+	}{
+		{
+			name: "success",
+			fields: fields{
+				variables: map[string]float64{"number2": 2, "number3": 3},
+				functions: models.FunctionGroup{
+					"+": {
+						Arity: 2,
+						Handler: func(arguments []float64) float64 {
+							return arguments[0] + arguments[1]
+						},
+					},
+				},
+			},
+			args:       args{codeParts: []string{"(number", "2", "+", "number", "3)"}},
+			wantNumber: 5,
+		},
+	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			gotNumber, gotErr := 0.0, error(nil)
