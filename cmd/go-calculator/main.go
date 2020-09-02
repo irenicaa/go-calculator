@@ -10,6 +10,7 @@ import (
 	"github.com/irenicaa/go-calculator/models"
 )
 
+var variables = map[string]float64{"pi": math.Pi, "e": math.E}
 var functions = models.FunctionGroup{
 	"+": {
 		Arity: 2,
@@ -157,7 +158,7 @@ func main() {
 			continue
 		}
 
-		calculator := calculator.NewCalculator(nil, functions)
+		calculator := calculator.NewCalculator(variables, functions)
 		err = calculator.Calculate(input)
 		if err != nil {
 			fmt.Printf("error: %s\n", err)
