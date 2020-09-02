@@ -47,6 +47,103 @@ var functions = models.FunctionGroup{
 			return math.Pow(arguments[0], arguments[1])
 		},
 	},
+
+	"floor": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Floor(arguments[0])
+		},
+	},
+	"ceil": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Ceil(arguments[0])
+		},
+	},
+	"trunc": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Trunc(arguments[0])
+		},
+	},
+	"round": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Round(arguments[0])
+		},
+	},
+	"sin": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Sin(arguments[0])
+		},
+	},
+	"cos": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Cos(arguments[0])
+		},
+	},
+	"tan": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Tan(arguments[0])
+		},
+	},
+	"asin": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Asin(arguments[0])
+		},
+	},
+	"acos": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Acos(arguments[0])
+		},
+	},
+	"atan": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Atan(arguments[0])
+		},
+	},
+	"atan2": {
+		Arity: 2,
+		Handler: func(arguments []float64) float64 {
+			return math.Atan2(arguments[0], arguments[1])
+		},
+	},
+	"sqrt": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Sqrt(arguments[0])
+		},
+	},
+	"exp": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Exp(arguments[0])
+		},
+	},
+	"log": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Log(arguments[0])
+		},
+	},
+	"log10": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Log10(arguments[0])
+		},
+	},
+	"abs": {
+		Arity: 1,
+		Handler: func(arguments []float64) float64 {
+			return math.Abs(arguments[0])
+		},
+	},
 }
 
 func main() {
