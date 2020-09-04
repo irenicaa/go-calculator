@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"strings"
 
 	calculator "github.com/irenicaa/go-calculator"
 	"github.com/irenicaa/go-calculator/models"
@@ -158,6 +159,13 @@ func main() {
 			continue
 		}
 
+		variable := ""
+		separatorIndex := strings.IndexRune(input, '=')
+		if separatorIndex != -1 {
+			variable = strings.TrimSpace(input[:separatorIndex])
+			input = input[separatorIndex+1:]
+		}
+
 		calculator := calculator.NewCalculator(variables, functions)
 		err = calculator.Calculate(input)
 		if err != nil {
@@ -169,6 +177,10 @@ func main() {
 		if err != nil {
 			fmt.Printf("error: %s\n", err)
 			continue
+		}
+
+		if variable != "" {
+			variables[variable] = number
 		}
 
 		fmt.Println(number)
