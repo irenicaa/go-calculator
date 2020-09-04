@@ -13,6 +13,7 @@ import (
 
 var variables = map[string]float64{"pi": math.Pi, "e": math.E}
 var functions = models.FunctionGroup{
+	// operators
 	"+": {
 		Arity: 2,
 		Handler: func(arguments []float64) float64 {
@@ -50,6 +51,7 @@ var functions = models.FunctionGroup{
 		},
 	},
 
+	// functions
 	"floor": {
 		Arity: 1,
 		Handler: func(arguments []float64) float64 {
