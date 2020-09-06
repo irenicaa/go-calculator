@@ -80,14 +80,6 @@ func (evaluator *Evaluator) Evaluate(
 	return nil
 }
 
-func reverseArguments(arguments []float64) {
-	arity := len(arguments)
-	for i := 0; i < arity/2; i++ {
-		arguments[arity-i-1], arguments[i] =
-			arguments[i], arguments[arity-i-1]
-	}
-}
-
 // Finalize ...
 func (evaluator Evaluator) Finalize() (float64, error) {
 	number, ok := evaluator.stack.Pop()
@@ -96,4 +88,12 @@ func (evaluator Evaluator) Finalize() (float64, error) {
 	}
 
 	return number, nil
+}
+
+func reverseArguments(arguments []float64) {
+	arity := len(arguments)
+	for i := 0; i < arity/2; i++ {
+		arguments[arity-i-1], arguments[i] =
+			arguments[i], arguments[arity-i-1]
+	}
 }
