@@ -150,6 +150,10 @@ var functions = models.FunctionGroup{
 	},
 }
 
+func printError(err error) {
+	fmt.Printf("error: %s\n", err)
+}
+
 func main() {
 	bufStdin := bufio.NewReader(os.Stdin)
 	for {
@@ -157,7 +161,7 @@ func main() {
 
 		input, err := bufStdin.ReadString('\n')
 		if err != nil {
-			fmt.Printf("error: %s\n", err)
+			printError(err)
 			continue
 		}
 
@@ -171,13 +175,13 @@ func main() {
 		calculator := calculator.NewCalculator(variables, functions)
 		err = calculator.Calculate(input)
 		if err != nil {
-			fmt.Printf("error: %s\n", err)
+			printError(err)
 			continue
 		}
 
 		number, err := calculator.Finalize()
 		if err != nil {
-			fmt.Printf("error: %s\n", err)
+			printError(err)
 			continue
 		}
 
