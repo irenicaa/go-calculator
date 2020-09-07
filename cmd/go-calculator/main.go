@@ -158,8 +158,6 @@ func printError(err error) {
 func main() {
 	bufStdin := bufio.NewReader(os.Stdin)
 	for {
-		fmt.Print("> ")
-
 		input, err := bufStdin.ReadString('\n')
 		if err != nil {
 			if err == io.EOF {
