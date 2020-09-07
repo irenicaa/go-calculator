@@ -174,6 +174,9 @@ func main() {
 			variable = strings.TrimSpace(input[:separatorIndex])
 			input = input[separatorIndex+1:]
 		}
+		if variable == "" && strings.TrimSpace(input) == "" {
+			continue
+		}
 
 		calculator := calculator.NewCalculator(variables, functions)
 		err = calculator.Calculate(input)
