@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"io"
 	"math"
@@ -156,6 +157,8 @@ func printError(err error) {
 }
 
 func main() {
+	flag.Parse()
+
 	bufStdin := bufio.NewReader(os.Stdin)
 	for {
 		input, err := bufStdin.ReadString('\n')
