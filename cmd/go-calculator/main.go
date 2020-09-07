@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"math"
 	"os"
 	"strings"
@@ -161,6 +162,10 @@ func main() {
 
 		input, err := bufStdin.ReadString('\n')
 		if err != nil {
+			if err == io.EOF {
+				break
+			}
+
 			printError(err)
 			continue
 		}
