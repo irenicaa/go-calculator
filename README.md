@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.org/irenicaa/go-calculator.svg?branch=master)](https://travis-ci.org/irenicaa/go-calculator)
 [![codecov](https://codecov.io/gh/irenicaa/go-calculator/branch/master/graph/badge.svg)](https://codecov.io/gh/irenicaa/go-calculator)
 
-The simplified clone of the Unix bc tool.
+The simplified clone of the Unix bc tool
 
 ## Installation
 
@@ -27,7 +27,7 @@ Options:
 
 ## Docs
 
-[Docs](docs/).
+[Docs](docs/)
 
 ## License
 

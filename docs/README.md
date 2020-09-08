@@ -1,4 +1,4 @@
 ### Docs
 
-- [Grammar](grammar.md).
-- [Runtime](runtime.md).
+- [Grammar](grammar.md)
+- [Runtime](runtime.md)
