@@ -156,6 +156,17 @@ func printError(err error) {
 	fmt.Printf("error: %s\n", err)
 }
 
+func extractVariable(input string) (string, string) {
+	variable := ""
+	separatorIndex := strings.IndexRune(input, '=')
+	if separatorIndex != -1 {
+		variable = strings.TrimSpace(input[:separatorIndex])
+		input = input[separatorIndex+1:]
+	}
+
+	return variable, input
+}
+
 func main() {
 	flag.Parse()
 
@@ -171,12 +182,7 @@ func main() {
 			continue
 		}
 
-		variable := ""
-		separatorIndex := strings.IndexRune(input, '=')
-		if separatorIndex != -1 {
-			variable = strings.TrimSpace(input[:separatorIndex])
-			input = input[separatorIndex+1:]
-		}
+		variable, input := extractVariable(input)
 		if variable == "" && strings.TrimSpace(input) == "" {
 			continue
 		}
