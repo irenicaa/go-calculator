@@ -19,11 +19,15 @@ $ go get github.com/irenicaa/go-calculator/...
 $ go-calculator -h | -help | --help
 ```
 
-Stdin: code.
+Stdin: code (see [docs](docs/) for details).
 
 Options:
 
 - `-h`, `-help`, `--help` &mdash; show the help message and exit.
+
+## Docs
+
+[Docs](docs/).
 
 ## License
 
