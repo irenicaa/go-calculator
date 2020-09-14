@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestFunctionNameGroup_Names(test *testing.T) {
+func TestFunctionGroup_Names(test *testing.T) {
 	testsCases := []struct {
 		name      string
 		functions FunctionGroup
