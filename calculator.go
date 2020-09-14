@@ -67,6 +67,8 @@ func (calculator *Calculator) Finalize() (float64, error) {
 		return 0, fmt.Errorf("unable to finalize the tokenizer: %s", err)
 	}
 
+	// data that came from that Finalize() call
+	// can't lead to an error inside the Translate() call
 	commands, _ := calculator.translator.Translate(
 		tokens,
 		calculator.functionsNames,
