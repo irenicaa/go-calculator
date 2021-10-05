@@ -5,7 +5,7 @@
 [![Build Status](https://app.travis-ci.com/irenicaa/go-calculator.svg?branch=master)](https://app.travis-ci.com/irenicaa/go-calculator)
 [![codecov](https://codecov.io/gh/irenicaa/go-calculator/branch/master/graph/badge.svg)](https://codecov.io/gh/irenicaa/go-calculator)
 
-The simplified clone of the Unix bc tool.
+The simplified clone of the [Unix bc tool](<https://en.wikipedia.org/wiki/Bc_(programming_language)>).
 
 ## Installation
 
