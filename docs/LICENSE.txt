@@ -1,6 +1,6 @@
 CC BY 4.0
 
-Copyright (C) 2020 irenica <root@irenica.pro>
+Copyright (C) 2020-2021 irenica <root@irenica.pro>
 
 This documentation is licensed under a
 Creative Commons Attribution 4.0 International License.

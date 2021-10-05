@@ -72,4 +72,4 @@ pi = (a2 + b2)^2 / (4*t2)
 
 The MIT License (MIT)
 
-Copyright &copy; 2020 irenica
+Copyright &copy; 2020-2021 irenica
