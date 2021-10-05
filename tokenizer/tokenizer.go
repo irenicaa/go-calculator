@@ -45,8 +45,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]models.Token, error) {
 				}
 			}
 			if tokenizer.state != identifierTokenizerState {
-				err := tokenizer.resetBuffer(symbolPosition)
-				if err != nil {
+				if err := tokenizer.resetBuffer(symbolPosition); err != nil {
 					return nil, err
 				}
 			}
@@ -54,8 +53,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]models.Token, error) {
 			tokenizer.state = identifierTokenizerState
 			tokenizer.buffer += string(symbol)
 		case unicode.IsSpace(symbol):
-			err := tokenizer.resetBuffer(symbolPosition)
-			if err != nil {
+			if err := tokenizer.resetBuffer(symbolPosition); err != nil {
 				return nil, err
 			}
 
@@ -68,8 +66,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]models.Token, error) {
 
 			fallthrough
 		case strings.ContainsRune("*/%^(),", symbol):
-			err := tokenizer.resetBuffer(symbolPosition)
-			if err != nil {
+			if err := tokenizer.resetBuffer(symbolPosition); err != nil {
 				return nil, err
 			}
 
@@ -96,8 +93,7 @@ func (tokenizer *Tokenizer) Tokenize(code string) ([]models.Token, error) {
 
 // Finalize ...
 func (tokenizer *Tokenizer) Finalize() ([]models.Token, error) {
-	err := tokenizer.resetBuffer(eoi)
-	if err != nil {
+	if err := tokenizer.resetBuffer(eoi); err != nil {
 		return nil, err
 	}
 

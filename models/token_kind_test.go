@@ -136,9 +136,9 @@ func TestTokenKind_IsOperator(test *testing.T) {
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			ok := testCase.kind.IsOperator()
+			gotOk := testCase.kind.IsOperator()
 
-			assert.Equal(test, testCase.wantOk, ok)
+			assert.Equal(test, testCase.wantOk, gotOk)
 		})
 	}
 }
@@ -167,9 +167,9 @@ func TestTokenKind_IsParenthesis(test *testing.T) {
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			ok := testCase.kind.IsParenthesis()
+			gotOk := testCase.kind.IsParenthesis()
 
-			assert.Equal(test, testCase.wantOk, ok)
+			assert.Equal(test, testCase.wantOk, gotOk)
 		})
 	}
 }

@@ -157,8 +157,7 @@ func printError(err error) {
 }
 
 func removeComment(input string) string {
-	separatorIndex := strings.Index(input, "//")
-	if separatorIndex != -1 {
+	if separatorIndex := strings.Index(input, "//"); separatorIndex != -1 {
 		input = input[:separatorIndex]
 	}
 
@@ -167,8 +166,7 @@ func removeComment(input string) string {
 
 func extractVariable(input string) (string, string) {
 	variable := ""
-	separatorIndex := strings.IndexRune(input, '=')
-	if separatorIndex != -1 {
+	if separatorIndex := strings.IndexRune(input, '='); separatorIndex != -1 {
 		variable = strings.TrimSpace(input[:separatorIndex])
 		input = input[separatorIndex+1:]
 	}
@@ -199,8 +197,7 @@ func main() {
 		}
 
 		calculator := calculator.NewCalculator(variables, functions)
-		err = calculator.Calculate(input)
-		if err != nil {
+		if err = calculator.Calculate(input); err != nil {
 			printError(err)
 			continue
 		}

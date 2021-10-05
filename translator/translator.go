@@ -29,8 +29,7 @@ func (translator *Translator) Translate(
 		case token.Kind == models.NumberToken:
 			translator.addCommand(models.PushNumberCommand, token)
 		case token.Kind == models.IdentifierToken:
-			_, ok := functions[token.Value]
-			if ok {
+			if _, ok := functions[token.Value]; ok {
 				translator.stack.Push(token)
 				continue
 			}
@@ -138,8 +137,7 @@ func (translator *Translator) unwindStack(checker stackChecker) error {
 	for {
 		tokenOnStack, ok := translator.stack.Pop()
 
-		err := checker(tokenOnStack, ok)
-		switch err {
+		switch err := checker(tokenOnStack, ok); err {
 		case nil:
 		case errStopAndRestore:
 			translator.stack.Push(tokenOnStack)

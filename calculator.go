@@ -25,12 +25,11 @@ func NewCalculator(
 	variables map[string]float64,
 	functions models.FunctionGroup,
 ) *Calculator {
-	calculator := Calculator{
+	return &Calculator{
 		variables:      variables,
 		functions:      functions,
 		functionsNames: functions.Names(),
 	}
-	return &calculator
 }
 
 // Calculate ...
