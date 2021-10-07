@@ -157,16 +157,6 @@ func printError(err error) {
 	fmt.Printf("error: %s\n", err)
 }
 
-func extractVariable(input string) (string, string) {
-	variable := ""
-	if separatorIndex := strings.IndexRune(input, '='); separatorIndex != -1 {
-		variable = strings.TrimSpace(input[:separatorIndex])
-		input = input[separatorIndex+1:]
-	}
-
-	return variable, input
-}
-
 func main() {
 	flag.Parse()
 
@@ -184,7 +174,7 @@ func main() {
 
 		input = tokenizer.RemoveComment(input)
 
-		variable, input := extractVariable(input)
+		variable, input := tokenizer.ExtractVariable(input)
 		if variable == "" && strings.TrimSpace(input) == "" {
 			continue
 		}
