@@ -11,6 +11,7 @@ import (
 
 	calculator "github.com/irenicaa/go-calculator"
 	"github.com/irenicaa/go-calculator/models"
+	"github.com/irenicaa/go-calculator/tokenizer"
 )
 
 var variables = map[string]float64{"pi": math.Pi, "e": math.E}
@@ -156,14 +157,6 @@ func printError(err error) {
 	fmt.Printf("error: %s\n", err)
 }
 
-func removeComment(input string) string {
-	if separatorIndex := strings.Index(input, "//"); separatorIndex != -1 {
-		input = input[:separatorIndex]
-	}
-
-	return input
-}
-
 func extractVariable(input string) (string, string) {
 	variable := ""
 	if separatorIndex := strings.IndexRune(input, '='); separatorIndex != -1 {
@@ -189,7 +182,7 @@ func main() {
 			continue
 		}
 
-		input = removeComment(input)
+		input = tokenizer.RemoveComment(input)
 
 		variable, input := extractVariable(input)
 		if variable == "" && strings.TrimSpace(input) == "" {
