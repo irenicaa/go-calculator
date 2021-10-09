@@ -6,10 +6,8 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
 
-	calculatorpkg "github.com/irenicaa/go-calculator"
-	"github.com/irenicaa/go-calculator/tokenizer"
+	"github.com/irenicaa/go-calculator"
 )
 
 func printError(err error) {
@@ -31,30 +29,16 @@ func main() {
 			continue
 		}
 
-		input = tokenizer.RemoveComment(input)
-
-		variable, input := tokenizer.ExtractVariable(input)
-		if variable == "" && strings.TrimSpace(input) == "" {
-			continue
-		}
-
-		calculator := calculatorpkg.NewCalculator(
-			calculatorpkg.BuiltInVariables,
-			calculatorpkg.BuiltInFunctions,
+		number, err := calculator.ProcessLine(
+			input,
+			calculator.BuiltInVariables,
+			calculator.BuiltInFunctions,
 		)
-		if err = calculator.Calculate(input); err != nil {
-			printError(err)
-			continue
-		}
-
-		number, err := calculator.Finalize()
 		if err != nil {
-			printError(err)
+			if err != calculator.ErrNoCode {
+				printError(err)
+			}
 			continue
-		}
-
-		if variable != "" {
-			calculatorpkg.BuiltInVariables[variable] = number
 		}
 
 		fmt.Println(number)
