@@ -2,6 +2,7 @@ package evaluator
 
 import (
 	"testing"
+	"testing/iotest"
 
 	"github.com/irenicaa/go-calculator/models"
 	"github.com/stretchr/testify/assert"
@@ -93,8 +94,8 @@ func TestEvaluator(test *testing.T) {
 				functions: models.FunctionGroup{
 					"sub": {
 						Arity: 2,
-						Handler: func(arguments []float64) float64 {
-							return arguments[0] - arguments[1]
+						Handler: func(arguments []float64) (float64, error) {
+							return arguments[0] - arguments[1], nil
 						},
 					},
 				},
@@ -114,8 +115,8 @@ func TestEvaluator(test *testing.T) {
 				functions: models.FunctionGroup{
 					"sub": {
 						Arity: 2,
-						Handler: func(arguments []float64) float64 {
-							return arguments[0] - arguments[1]
+						Handler: func(arguments []float64) (float64, error) {
+							return arguments[0] - arguments[1], nil
 						},
 					},
 				},
@@ -135,8 +136,8 @@ func TestEvaluator(test *testing.T) {
 				functions: models.FunctionGroup{
 					"sub": {
 						Arity: 2,
-						Handler: func(arguments []float64) float64 {
-							return arguments[0] - arguments[1]
+						Handler: func(arguments []float64) (float64, error) {
+							return arguments[0] - arguments[1], nil
 						},
 					},
 				},
@@ -144,6 +145,28 @@ func TestEvaluator(test *testing.T) {
 			wantNumber: 0,
 			wantErr: "number stack is empty for argument #1 in command " +
 				"{Kind:2 Operand:sub} with number #1",
+		},
+		{
+			name: "with the call function command (error with the function call)",
+			args: args{
+				commands: []models.Command{
+					{Kind: models.PushNumberCommand, Operand: "2"},
+					{Kind: models.PushNumberCommand, Operand: "3"},
+					{Kind: models.CallFunctionCommand, Operand: "sub"},
+				},
+				variables: nil,
+				functions: models.FunctionGroup{
+					"sub": {
+						Arity: 2,
+						Handler: func(arguments []float64) (float64, error) {
+							return 0, iotest.ErrTimeout
+						},
+					},
+				},
+			},
+			wantNumber: 0,
+			wantErr: "unable to call the function from command " +
+				"{Kind:2 Operand:sub} with number #2: " + iotest.ErrTimeout.Error(),
 		},
 	}
 	for _, testCase := range testsCases {
@@ -198,8 +221,8 @@ func TestEvaluator_withSequentialCalls(test *testing.T) {
 				functions: models.FunctionGroup{
 					"sub": {
 						Arity: 2,
-						Handler: func(arguments []float64) float64 {
-							return arguments[0] - arguments[1]
+						Handler: func(arguments []float64) (float64, error) {
+							return arguments[0] - arguments[1], nil
 						},
 					},
 				},

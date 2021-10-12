@@ -69,10 +69,18 @@ func (evaluator *Evaluator) Evaluate(
 
 				arguments = append(arguments, number)
 			}
-
 			reverseArguments(arguments)
 
-			number := function.Handler(arguments)
+			number, err := function.Handler(arguments)
+			if err != nil {
+				return fmt.Errorf(
+					"unable to call the function from command %+v with number #%d: %s",
+					command,
+					commandIndex,
+					err,
+				)
+			}
+
 			evaluator.stack.Push(number)
 		}
 	}

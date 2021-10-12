@@ -30,8 +30,8 @@ func TestCalculator(test *testing.T) {
 				functions: models.FunctionGroup{
 					"+": {
 						Arity: 2,
-						Handler: func(arguments []float64) float64 {
-							return arguments[0] + arguments[1]
+						Handler: func(arguments []float64) (float64, error) {
+							return arguments[0] + arguments[1], nil
 						},
 					},
 				},
@@ -47,8 +47,8 @@ func TestCalculator(test *testing.T) {
 				functions: models.FunctionGroup{
 					"+": {
 						Arity: 2,
-						Handler: func(arguments []float64) float64 {
-							return arguments[0] + arguments[1]
+						Handler: func(arguments []float64) (float64, error) {
+							return arguments[0] + arguments[1], nil
 						},
 					},
 				},
@@ -180,8 +180,8 @@ func TestCalculator_withSequentialCalls(test *testing.T) {
 				functions: models.FunctionGroup{
 					"+": {
 						Arity: 2,
-						Handler: func(arguments []float64) float64 {
-							return arguments[0] + arguments[1]
+						Handler: func(arguments []float64) (float64, error) {
+							return arguments[0] + arguments[1], nil
 						},
 					},
 				},
