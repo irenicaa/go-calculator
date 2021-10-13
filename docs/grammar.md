@@ -1,9 +1,12 @@
 ### Grammar
 
 ```
-code = {definition};
+code = {statement};
 
-definition = [IDENTIFIER, "="], expression;
+statement =
+  variable definition
+  | expression;
+variable definition = IDENTIFIER, "=", expression;
 
 expression = addition;
 addition = multiplication, [("+" | "-"), addition];
