@@ -18,6 +18,10 @@ func main() {
 	flag.Parse()
 
 	bufStdin := bufio.NewReader(os.Stdin)
+	interpreter := calculator.NewInterpreter(
+		calculator.BuiltInVariables,
+		calculator.BuiltInFunctions,
+	)
 	for {
 		input, err := bufStdin.ReadString('\n')
 		if err != nil {
@@ -29,11 +33,7 @@ func main() {
 			continue
 		}
 
-		number, err := calculator.ProcessLine(
-			input,
-			calculator.BuiltInVariables,
-			calculator.BuiltInFunctions,
-		)
+		number, err := interpreter.Interpret(input)
 		if err != nil {
 			if err != calculator.ErrNoCode {
 				printError(err)
