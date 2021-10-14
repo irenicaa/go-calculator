@@ -26,6 +26,11 @@ func NewInterpreter(
 	return Interpreter{variables: variables.Copy(), functions: functions}
 }
 
+// Variables ...
+func (interpreter Interpreter) Variables() models.VariableGroup {
+	return interpreter.variables
+}
+
 // Interpret ...
 func (interpreter Interpreter) Interpret(input string) (float64, error) {
 	input = tokenizer.RemoveComment(input)
