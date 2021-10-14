@@ -23,12 +23,7 @@ func NewInterpreter(
 	variables models.VariableGroup,
 	functions models.FunctionGroup,
 ) Interpreter {
-	copyOfVariables := models.VariableGroup{}
-	for name, value := range variables {
-		copyOfVariables[name] = value
-	}
-
-	return Interpreter{variables: copyOfVariables, functions: functions}
+	return Interpreter{variables: variables.Copy(), functions: functions}
 }
 
 // Interpret ...
