@@ -9,7 +9,7 @@ import (
 
 func TestCalculator(test *testing.T) {
 	type fields struct {
-		variables map[string]float64
+		variables models.VariableGroup
 		functions models.FunctionGroup
 	}
 	type args struct {
@@ -43,7 +43,7 @@ func TestCalculator(test *testing.T) {
 		{
 			name: "success with variables",
 			fields: fields{
-				variables: map[string]float64{"x": 2, "y": 3},
+				variables: models.VariableGroup{"x": 2, "y": 3},
 				functions: models.FunctionGroup{
 					"+": {
 						Arity: 2,
@@ -160,7 +160,7 @@ func TestCalculator(test *testing.T) {
 
 func TestCalculator_withSequentialCalls(test *testing.T) {
 	type fields struct {
-		variables map[string]float64
+		variables models.VariableGroup
 		functions models.FunctionGroup
 	}
 	type args struct {
@@ -176,7 +176,7 @@ func TestCalculator_withSequentialCalls(test *testing.T) {
 		{
 			name: "success",
 			fields: fields{
-				variables: map[string]float64{"number2": 2, "number3": 3},
+				variables: models.VariableGroup{"number2": 2, "number3": 3},
 				functions: models.FunctionGroup{
 					"+": {
 						Arity: 2,

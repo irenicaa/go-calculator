@@ -11,7 +11,7 @@ import (
 
 // Calculator ...
 type Calculator struct {
-	variables      map[string]float64
+	variables      models.VariableGroup
 	functions      models.FunctionGroup
 	functionsNames models.FunctionNameGroup
 
@@ -22,7 +22,7 @@ type Calculator struct {
 
 // NewCalculator ...
 func NewCalculator(
-	variables map[string]float64,
+	variables models.VariableGroup,
 	functions models.FunctionGroup,
 ) *Calculator {
 	return &Calculator{

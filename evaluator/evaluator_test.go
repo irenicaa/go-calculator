@@ -11,7 +11,7 @@ import (
 func TestEvaluator(test *testing.T) {
 	type args struct {
 		commands  []models.Command
-		variables map[string]float64
+		variables models.VariableGroup
 		functions models.FunctionGroup
 	}
 
@@ -63,7 +63,7 @@ func TestEvaluator(test *testing.T) {
 				commands: []models.Command{
 					{Kind: models.PushVariableCommand, Operand: "test"},
 				},
-				variables: map[string]float64{"test": 2.3},
+				variables: models.VariableGroup{"test": 2.3},
 				functions: nil,
 			},
 			wantNumber: 2.3,
@@ -75,7 +75,7 @@ func TestEvaluator(test *testing.T) {
 				commands: []models.Command{
 					{Kind: models.PushVariableCommand, Operand: "unknown"},
 				},
-				variables: map[string]float64{"test": 2.3},
+				variables: models.VariableGroup{"test": 2.3},
 				functions: nil,
 			},
 			wantNumber: 0,
@@ -196,7 +196,7 @@ func TestEvaluator(test *testing.T) {
 func TestEvaluator_withSequentialCalls(test *testing.T) {
 	type args struct {
 		commandGroups [][]models.Command
-		variables     map[string]float64
+		variables     models.VariableGroup
 		functions     models.FunctionGroup
 	}
 

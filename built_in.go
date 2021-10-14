@@ -8,7 +8,7 @@ import (
 
 // ...
 var (
-	BuiltInVariables = map[string]float64{"pi": math.Pi, "e": math.E}
+	BuiltInVariables = models.VariableGroup{"pi": math.Pi, "e": math.E}
 	BuiltInFunctions = models.FunctionGroup{
 		// operators
 		"+": {

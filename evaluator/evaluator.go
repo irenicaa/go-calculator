@@ -17,7 +17,7 @@ type Evaluator struct {
 // Evaluate ...
 func (evaluator *Evaluator) Evaluate(
 	commands []models.Command,
-	variables map[string]float64,
+	variables models.VariableGroup,
 	functions models.FunctionGroup,
 ) error {
 	for commandIndex, command := range commands {

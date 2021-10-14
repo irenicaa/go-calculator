@@ -14,16 +14,16 @@ var ErrNoCode = errors.New("no code")
 
 // Interpreter ...
 type Interpreter struct {
-	variables map[string]float64
+	variables models.VariableGroup
 	functions models.FunctionGroup
 }
 
 // NewInterpreter ...
 func NewInterpreter(
-	variables map[string]float64,
+	variables models.VariableGroup,
 	functions models.FunctionGroup,
 ) Interpreter {
-	copyOfVariables := map[string]float64{}
+	copyOfVariables := models.VariableGroup{}
 	for name, value := range variables {
 		copyOfVariables[name] = value
 	}
