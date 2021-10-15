@@ -15,45 +15,45 @@ func TestExtractVariable(test *testing.T) {
 		name         string
 		args         args
 		wantVariable string
-		wantInput    string
+		wantCode     string
 	}{
 		{
 			name:         "string with separator",
 			args:         args{"test1 = test2 + 1"},
 			wantVariable: "test1",
-			wantInput:    " test2 + 1",
+			wantCode:     " test2 + 1",
 		},
 		{
 			name:         "string with separator and without variable",
 			args:         args{"= test2 + 1"},
 			wantVariable: "",
-			wantInput:    " test2 + 1",
+			wantCode:     " test2 + 1",
 		},
 		{
 			name:         "string without separator",
 			args:         args{"test2 + 1"},
 			wantVariable: "",
-			wantInput:    "test2 + 1",
+			wantCode:     "test2 + 1",
 		},
 		{
 			name:         "string with several separators",
 			args:         args{"test1 = test2 = test3 + 1"},
 			wantVariable: "test1",
-			wantInput:    " test2 = test3 + 1",
+			wantCode:     " test2 = test3 + 1",
 		},
 		{
 			name:         "empty string",
 			args:         args{""},
 			wantVariable: "",
-			wantInput:    "",
+			wantCode:     "",
 		},
 	}
 	for _, testCase := range testsCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			gotVariable, gotInput := ExtractVariable(testCase.args.input)
+			gotVariable, gotCode := ExtractVariable(testCase.args.input)
 
 			assert.Equal(test, testCase.wantVariable, gotVariable)
-			assert.Equal(test, testCase.wantInput, gotInput)
+			assert.Equal(test, testCase.wantCode, gotCode)
 		})
 	}
 }

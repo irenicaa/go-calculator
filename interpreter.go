@@ -35,14 +35,14 @@ func (interpreter Interpreter) Variables() models.VariableGroup {
 func (interpreter Interpreter) Interpret(input string) (float64, error) {
 	input = tokenizer.RemoveComment(input)
 
-	variable, input := tokenizer.ExtractVariable(input)
-	if variable == "" && strings.TrimSpace(input) == "" {
+	variable, code := tokenizer.ExtractVariable(input)
+	if variable == "" && strings.TrimSpace(code) == "" {
 		return 0, ErrNoCode
 	}
 
 	calculator := NewCalculator(interpreter.variables, interpreter.functions)
-	if err := calculator.Calculate(input); err != nil {
-		return 0, fmt.Errorf("unable to calculate the input: %s", err)
+	if err := calculator.Calculate(code); err != nil {
+		return 0, fmt.Errorf("unable to calculate the code: %s", err)
 	}
 
 	number, err := calculator.Finalize()
