@@ -1,6 +1,7 @@
 package calculator
 
 import (
+	"math"
 	"testing"
 
 	"github.com/irenicaa/go-calculator/models"
@@ -54,6 +55,36 @@ func TestCalculator(test *testing.T) {
 				},
 			},
 			args:       args{code: "x + y"},
+			wantNumber: 5,
+			wantErr:    "",
+		},
+		{
+			name: "success with function calls",
+			fields: fields{
+				variables: nil,
+				functions: models.FunctionGroup{
+					"+": {
+						Arity: 2,
+						Handler: func(arguments []float64) (float64, error) {
+							return arguments[0] + arguments[1], nil
+						},
+					},
+
+					"floor": {
+						Arity: 1,
+						Handler: func(arguments []float64) (float64, error) {
+							return math.Floor(arguments[0]), nil
+						},
+					},
+					"ceil": {
+						Arity: 1,
+						Handler: func(arguments []float64) (float64, error) {
+							return math.Ceil(arguments[0]), nil
+						},
+					},
+				},
+			},
+			args:       args{code: "floor(2.3) + ceil(2.3)"},
 			wantNumber: 5,
 			wantErr:    "",
 		},
