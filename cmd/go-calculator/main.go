@@ -7,7 +7,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/irenicaa/go-calculator"
+	"github.com/irenicaa/go-calculator/v2"
 )
 
 func printError(err error) {

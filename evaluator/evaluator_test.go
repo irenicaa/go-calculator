@@ -4,7 +4,7 @@ import (
 	"testing"
 	"testing/iotest"
 
-	"github.com/irenicaa/go-calculator/models"
+	"github.com/irenicaa/go-calculator/v2/models"
 	"github.com/stretchr/testify/assert"
 )
 

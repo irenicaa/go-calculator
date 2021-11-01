@@ -3,10 +3,10 @@ package calculator
 import (
 	"fmt"
 
-	"github.com/irenicaa/go-calculator/evaluator"
-	"github.com/irenicaa/go-calculator/models"
-	"github.com/irenicaa/go-calculator/tokenizer"
-	"github.com/irenicaa/go-calculator/translator"
+	"github.com/irenicaa/go-calculator/v2/evaluator"
+	"github.com/irenicaa/go-calculator/v2/models"
+	"github.com/irenicaa/go-calculator/v2/tokenizer"
+	"github.com/irenicaa/go-calculator/v2/translator"
 )
 
 // Calculator ...

@@ -3,7 +3,7 @@ package translator
 import (
 	"testing"
 
-	"github.com/irenicaa/go-calculator/models"
+	"github.com/irenicaa/go-calculator/v2/models"
 	"github.com/stretchr/testify/assert"
 )
 

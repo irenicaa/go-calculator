@@ -1,4 +1,4 @@
-module github.com/irenicaa/go-calculator
+module github.com/irenicaa/go-calculator/v2
 
 go 1.15
 

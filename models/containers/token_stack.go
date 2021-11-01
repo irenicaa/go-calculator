@@ -1,6 +1,6 @@
 package containers
 
-import "github.com/irenicaa/go-calculator/models"
+import "github.com/irenicaa/go-calculator/v2/models"
 
 // TokenStack ...
 type TokenStack []models.Token

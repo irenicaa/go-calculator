@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/irenicaa/go-calculator/models"
-	"github.com/irenicaa/go-calculator/tokenizer"
+	"github.com/irenicaa/go-calculator/v2/models"
+	"github.com/irenicaa/go-calculator/v2/tokenizer"
 )
 
 // ErrNoCode ...
